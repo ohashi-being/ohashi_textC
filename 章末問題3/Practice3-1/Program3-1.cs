@@ -29,6 +29,8 @@ namespace Practice3_1 {
             ShowOver(wNumbers, 50);
             Console.WriteLine("--------解答4-------");
             ShowList(wNumbers);
+            Console.WriteLine("\n終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
 
         // 1の解答
@@ -53,6 +55,10 @@ namespace Practice3_1 {
         /// <param name="vNumbers">数字のリスト</param>
         /// <param name="vDivisor">割りたい数</param>
         static void DivideNumber(List<int> vNumbers, double vDivisor) {
+            if (vDivisor == 0) {
+                Console.WriteLine("0で割ることはできません");
+                return;
+            }
             vNumbers.ForEach(n => Console.WriteLine(n / vDivisor));
         }
 
@@ -75,9 +81,13 @@ namespace Practice3_1 {
         /// </summary>
         /// <param name="vNumbers">数字のリスト</param>
         /// <returns></returns>
-        static List<int> DoubleNumber(List<int> vNumbers) => vNumbers.Select(n => n * 2).ToList();
+        static List<int> DoubleNumbers(List<int> vNumbers) => vNumbers.Select(n => n * 2).ToList();
+        /// <summary>
+        /// 入力したリストの要素2倍して表示する
+        /// </summary>
+        /// <param name="vNumbers"></param>
         static void ShowList(List<int> vNumbers) {
-            List<int> wNumbers = DoubleNumber(vNumbers);
+            List<int> wNumbers = DoubleNumbers(vNumbers);
             wNumbers.ForEach(n => Console.WriteLine(n));
         }
     }
