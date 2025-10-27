@@ -1,7 +1,7 @@
 ﻿/* 問題2-1 
 
  1.以下のプロパティを持つ、Songクラスを定義していください。
-   Title：sring型（歌のタイトル）
+   Title：string型（歌のタイトル）
    ArtistName：string型（アーティスト名）
    Length：int型（演奏時間、単位は秒）
 
@@ -30,12 +30,10 @@ namespace Practice2_1 {
         /// <summary>
         /// アーティスト名、曲名、演奏時間を表示する
         /// </summary>
-        /// <param name="vSong"></param>
         // 4の解答
         static void PrintSongLength(Song vSong) {
-            int wMinutes = vSong.Length / 60;
-            int wSeconds = vSong.Length % 60;
-            Console.WriteLine($"{vSong.ArtistName} の {vSong.Title} は {wMinutes}:{wSeconds:D2} かかる");
+            TimeSpan wTime = TimeSpan.FromSeconds(vSong.Length);
+            Console.WriteLine($"{vSong.ArtistName} の {vSong.Title} は {wTime.Minutes}:{wTime.Seconds:D2} かかる");
         }
     }
 }

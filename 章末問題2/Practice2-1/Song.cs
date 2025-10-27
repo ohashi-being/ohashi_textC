@@ -7,15 +7,15 @@
         /// <summary>
         /// 歌のタイトル
         /// </summary>
-        public string Title;
+        public string Title { get; }
         /// <summary>
         /// アーティスト名
         /// </summary>
-        public string ArtistName;
+        public string ArtistName { get; }
         /// <summary>
         /// 演奏時間　（単位は秒）
         /// </summary>
-        public int Length;
+        public int Length { get; }
 
         /// <summary>
         /// 歌の情報を入力するコンストラクタ

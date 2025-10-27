@@ -11,9 +11,7 @@
         /// インチを取得してメートルに変換する
         /// </summary>
         /// <param name="vInch">入力されたインチ</param>
-        /// <returns></returns>
-        public static double ConverterInchToMeter(double vInch) {
-            return vInch * C_Ratio;
-        }
+        /// <returns>メートルに変換した値</returns>
+        public static double ConvertInchToMeter(double vInch) => vInch * C_Ratio;
     }
 }

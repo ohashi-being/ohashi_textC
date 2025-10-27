@@ -18,8 +18,7 @@ namespace Practice2_2 {
         /// <param name="vEnd">終わりの数</param>
         static void PrintInchToMeter(int vStart, int vEnd) {
             for (int wInch = vStart; wInch <= vEnd; wInch++) {
-                double wMeter = Converter.ConverterInchToMeter(wInch);
-                Console.WriteLine($"{wInch} インチは {wMeter} メートルです");
+                Console.WriteLine($"{wInch} インチは {Converter.ConvertInchToMeter(wInch)} メートルです");
             }
         }
     }

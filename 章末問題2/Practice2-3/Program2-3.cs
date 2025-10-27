@@ -7,7 +7,7 @@ using System;
 namespace Practice2_3 {
     class Program {
         static void Main(string[] args) {
-            var wSales = new SalesCounter(@"C:\\Users\\ohashi\\Desktop\\Sales.csv");
+            var wSales = new SalesCounter(@"..\..\Sales.csv");
             var wAmountPerCategory = wSales.GetCategorySales();
             foreach (var wObj in wAmountPerCategory) {
                 Console.WriteLine($"{wObj.Key} : {wObj.Value} 円");

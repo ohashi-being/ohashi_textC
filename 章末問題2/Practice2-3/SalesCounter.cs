@@ -5,7 +5,7 @@ namespace Practice2_3 {
     /// <summary>
     /// 売り上げの集計を行うクラス
     /// </summary>
-     public class SalesCounter {
+    public class SalesCounter {
         /// <summary>
         /// データを受け取るリスト
         /// </summary>
@@ -27,11 +27,11 @@ namespace Practice2_3 {
             string[] wLines = File.ReadAllLines(vFile);
             foreach (string wLine in wLines) {
                 string[] wItems = wLine.Split(',');
-                var wSale = new Sale {
-                    ShopName = wItems[0],
-                    ProductCategory = wItems[1],
-                    Amount = int.Parse(wItems[2])
-                };
+                var wSale = new Sale(
+                    wItems[0],
+                    wItems[1],
+                    int.Parse(wItems[2])
+                );
                 wSales.Add(wSale);
             }
             return wSales;
@@ -41,15 +41,15 @@ namespace Practice2_3 {
         /// </summary>
         /// <returns>カテゴリーごとの売り上げ</returns>
         public Dictionary<string, int> GetCategorySales() {
-            var wDict = new Dictionary<string, int>();
+            var wCategorySales = new Dictionary<string, int>();
             foreach (var wSale in this.FSales) {
-                if (wDict.ContainsKey(wSale.ProductCategory)) {
-                    wDict[wSale.ProductCategory] += wSale.Amount;
+                if (wCategorySales.ContainsKey(wSale.ProductCategory)) {
+                    wCategorySales[wSale.ProductCategory] += wSale.Amount;
                 } else {
-                    wDict[wSale.ProductCategory] = wSale.Amount;
+                    wCategorySales[wSale.ProductCategory] = wSale.Amount;
                 }
             }
-            return wDict;
+            return wCategorySales;
         }
     }
 }
