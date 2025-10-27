@@ -8,9 +8,9 @@ namespace Practice2_3 {
     class Program {
         static void Main(string[] args) {
             var wSales = new SalesCounter(@"..\..\Sales.csv");
-            var wAmountPerCategory = wSales.GetCategorySales();
-            foreach (var wObj in wAmountPerCategory) {
-                Console.WriteLine($"{wObj.Key} : {wObj.Value} 円");
+            var wCategoryAmounts = wSales.GetCategorySales();
+            foreach (var wCategoryAmount in wCategoryAmounts) {
+                Console.WriteLine($"{wCategoryAmount.Key} : {wCategoryAmount.Value} 円");
             }
         }
     }
