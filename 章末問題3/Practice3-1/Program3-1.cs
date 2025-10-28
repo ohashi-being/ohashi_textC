@@ -1,6 +1,6 @@
 ﻿/* 問題3-1
  * 以下のリストが定義してあります。
- * var numbers = new List<int> { 12, 87, 94, 14, 53, 20, 40, 35, 76, 91, 31, 17, 48 };
+ * var wNumbers = new List<int> { 12, 87, 94, 14, 53, 20, 40, 35, 76, 91, 31, 17, 48 };
 
  * このリストに対して、ラムダ式を使用して、次のコードを書いてください。
  * 
@@ -29,7 +29,7 @@ namespace Practice3_1 {
             ShowOver(wNumbers, 50);
             Console.WriteLine("--------解答4-------");
             ShowList(wNumbers);
-            Console.WriteLine("\n終了するには何かキーを押してください...");
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
 

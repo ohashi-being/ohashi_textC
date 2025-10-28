@@ -30,6 +30,8 @@ namespace Practice3_2 {
             ShowContainingCharacter(wNames, "o");
             Console.WriteLine("--------解答4-------");
             ShowStartingCharacter(wNames, "B");
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
 
         // 1の解答
