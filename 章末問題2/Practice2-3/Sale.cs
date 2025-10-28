@@ -19,11 +19,11 @@
         /// 商品情報を入力するコンストラクタ
         /// </summary>
         /// <param name="vShopName">店舗名</param>
-        /// <param name="vProdecutCategory">商品カテゴリ</param>
+        /// <param name="vProductCategory">商品カテゴリ</param>
         /// <param name="vAmount">売上高</param>
-        public Sale(string vShopName, string vProdecutCategory, int vAmount) {
+        public Sale(string vShopName, string vProductCategory, int vAmount) {
             this.ShopName = vShopName;
-            this.ProductCategory = vProdecutCategory;
+            this.ProductCategory = vProductCategory;
             this.Amount = vAmount;
         }
     }

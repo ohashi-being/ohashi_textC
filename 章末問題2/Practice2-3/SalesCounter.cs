@@ -24,15 +24,15 @@ namespace Practice2_3 {
         /// <returns>売り上げのデータ</returns>
         private static List<Sale> ReadSales(string vFile) {
             var wSales = new List<Sale>();
-            string[] wLines = File.ReadAllLines(vFile);
-            foreach (string wLine in wLines) {
+            foreach (string wLine in File.ReadLines(vFile)) {
                 string[] wItems = wLine.Split(',');
+                int.TryParse(wItems[2], out int wAmounts);
                 var wSale = new Sale(
-                    wItems[0],
-                    wItems[1],
-                    int.Parse(wItems[2])
-                );
-                wSales.Add(wSale);
+                        wItems[0],
+                        wItems[1],
+                        wAmounts
+                        );
+                 wSales.Add(wSale);
             }
             return wSales;
         }
@@ -43,11 +43,8 @@ namespace Practice2_3 {
         public Dictionary<string, int> GetCategorySales() {
             var wCategorySales = new Dictionary<string, int>();
             foreach (var wSale in this.FSales) {
-                if (wCategorySales.ContainsKey(wSale.ProductCategory)) {
-                    wCategorySales[wSale.ProductCategory] += wSale.Amount;
-                } else {
-                    wCategorySales[wSale.ProductCategory] = wSale.Amount;
-                }
+                wCategorySales.TryGetValue(wSale.ProductCategory, out int wCurrentAmount);
+                wCategorySales[wSale.ProductCategory] = wCurrentAmount + wSale.Amount;
             }
             return wCategorySales;
         }

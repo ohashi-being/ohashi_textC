@@ -5,7 +5,7 @@
 using System;
 
 namespace Practice2_3 {
-    class Program {
+    internal class Program {
         static void Main(string[] args) {
             var wSales = new SalesCounter(@"..\..\Sales.csv");
             var wCategoryAmounts = wSales.GetCategorySales();

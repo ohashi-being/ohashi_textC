@@ -11,7 +11,7 @@
 
  4.配列に格納されたすべてのSongオブジェクトの内容をコンソールに出力してください。
    演奏時間の表示は「4:16」の形式で表示してください。
-   ただし、演奏時間は必ず60秒未満と仮定してかまいません。  */
+   ただし、演奏時間は必ず60分未満と仮定してかまいません。  */
 using System;
 
 namespace Practice2_1 {
@@ -32,7 +32,7 @@ namespace Practice2_1 {
         /// </summary>
         // 4の解答
         static void PrintSongLength(Song vSong) {
-            TimeSpan wTime = TimeSpan.FromSeconds(vSong.Length);
+            var wTime = TimeSpan.FromSeconds(vSong.Length);
             Console.WriteLine($"{vSong.ArtistName} の {vSong.Title} は {wTime.Minutes}:{wTime.Seconds:D2} かかる");
         }
     }
