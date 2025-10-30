@@ -29,7 +29,7 @@ namespace Practice3_2 {
             Console.WriteLine("--------解答3-------");
             ShowCitiesContainingString(wNames, "o");
             Console.WriteLine("--------解答4-------");
-            ShowStartingString(wNames, 'B');
+            ShowCitiesStartingChar(wNames, 'B');
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
@@ -92,7 +92,7 @@ namespace Practice3_2 {
         /// </summary>
         /// <param name="vNames">都市名のリスト</param>
         /// <param name="vStartChar">1番目の文字</param>
-        static void ShowStartingString(List<string> vNames, char vStartChar) {
+        static void ShowCitiesStartingChar(List<string> vNames, char vStartChar) {
             if (vNames == null) {
                 Console.WriteLine("無効な引数です。");
                 return;
