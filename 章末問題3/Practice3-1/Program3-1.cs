@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Practice3_1 {
     internal class Program {
@@ -24,7 +25,7 @@ namespace Practice3_1 {
             Console.WriteLine("--------解答1-------");
             CheckDivision(wNumbers, 8, 9);
             Console.WriteLine("--------解答2-------");
-            DivideNumber(wNumbers);
+            ShowDivideNumber(wNumbers);
             Console.WriteLine("--------解答3-------");
             ShowNumbersAboveThreshold(wNumbers);
             Console.WriteLine("--------解答4-------");
@@ -51,14 +52,17 @@ namespace Practice3_1 {
         /// 入力した数で各要素を割った値を表示する
         /// </summary>
         /// <param name="vNumbers">数字のリスト</param>
-        static void DivideNumber(List<int> vNumbers) {
+        static void ShowDivideNumber(List<int> vNumbers) {
             Console.Write("割る数を入力してください:");
-            double wInput = double.Parse(Console.ReadLine());
+            if (!double.TryParse(Console.ReadLine(), out double wInput)) {
+                Console.WriteLine("数値を入力してください。");
+                return;
+            }
             if (wInput == 0) {
                 Console.WriteLine("0で割ることはできません");
                 return;
             }
-            vNumbers.ForEach(x => Console.WriteLine(x / wInput));
+            vNumbers.ForEach(x => Console.WriteLine((double)x / wInput));
         }
 
         // 3の解答
@@ -68,27 +72,24 @@ namespace Practice3_1 {
         /// <param name="vNumbers">数字のリスト</param>
         static void ShowNumbersAboveThreshold(List<int> vNumbers) {
             Console.Write("基準となる数を入力してください:");
-            int wThreshold = int.Parse(Console.ReadLine());
+            if (!int.TryParse(Console.ReadLine(), out int wThreshold)) {
+                Console.WriteLine("数値を入力してください。");
+                return;
+            }
             var wOverThresholds = vNumbers.Where(x => x >= wThreshold);
+            if (!wOverThresholds.Any()) {
+                Console.WriteLine("見つかりませんでした");
+                return;
+            }
             foreach (var wOverThreshold in wOverThresholds) {
                 Console.WriteLine(wOverThreshold);
             }
         }
-
         // 4の解答
         /// <summary>
-        /// 値を2倍にしてリストに格納する
+        /// リストの値を2倍にしてリストに格納し、表示する
         /// </summary>
         /// <param name="vNumbers">数字のリスト</param>
-        /// <returns>各要素を2倍したリスト</returns>
-        static List<int> DoubleNumbers(List<int> vNumbers) => vNumbers.Select(x => x * 2).ToList();
-        /// <summary>
-        /// 入力したリストの要素2倍して表示する
-        /// </summary>
-        /// <param name="vNumbers"></param>
-        static void ShowList(List<int> vNumbers) {
-            List<int> wNumbers = DoubleNumbers(vNumbers);
-            wNumbers.ForEach(x => Console.WriteLine(x));
-        }
+        static void ShowList(List<int> vNumbers) => vNumbers.Select(x => x * 2).ToList().ForEach(x => Console.WriteLine(x));
     }
 }
