@@ -47,7 +47,7 @@ namespace Practice3_2 {
                 return;
             }
             int wIndex = vNames.FindIndex(x => x.Equals(wInput, StringComparison.OrdinalIgnoreCase));
-            if (wIndex == -1)
+            if (wIndex < 0)
                 Console.WriteLine("見つかりませんでした");
             else
                 Console.WriteLine($"{wIndex} 番目に格納されています");
