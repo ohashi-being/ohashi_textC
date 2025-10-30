@@ -29,7 +29,7 @@ namespace Practice3_1 {
             Console.WriteLine("--------解答3-------");
             ShowNumbersAboveThreshold(wNumbers);
             Console.WriteLine("--------解答4-------");
-            ShowList(wNumbers);
+            ShowDoubleList(wNumbers);
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
@@ -90,6 +90,6 @@ namespace Practice3_1 {
         /// リストの値を2倍にしてリストに格納し、表示する
         /// </summary>
         /// <param name="vNumbers">数字のリスト</param>
-        static void ShowList(List<int> vNumbers) => vNumbers.Select(x => x * 2).ToList().ForEach(x => Console.WriteLine(x));
+        static void ShowDoubleList(List<int> vNumbers) => vNumbers.Select(x => x * 2).ToList().ForEach(x => Console.WriteLine(x));
     }
 }
