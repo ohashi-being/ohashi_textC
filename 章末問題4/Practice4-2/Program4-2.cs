@@ -42,6 +42,8 @@ namespace Practice4_2 {
             ShowArray(wYearMonthArray.Select(x => x.GetAfterOneMonth()).ToArray());
             Console.WriteLine("--------------------------");
             Show21Century(wYearMonthArray.Select(x => x.GetAfterOneMonth()).ToArray());
+            Console.WriteLine("\n終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
         // 2の解答
         /// <summary>
