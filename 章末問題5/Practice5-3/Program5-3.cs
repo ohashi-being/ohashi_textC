@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 /* 問題5.3
  * "Jackdaws love my big sphinx of quartz"という文字列があります。
