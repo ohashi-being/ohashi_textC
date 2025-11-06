@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Practice4_1;
 
@@ -26,20 +27,20 @@ namespace Practice4_2 {
         static void Main(string[] args) {
             // 1の解答
             var wYearMonthArray = new YearMonth[] {
-                new YearMonth(1019,4),
-                new YearMonth(1011,8),
+                new YearMonth(19,4),
+                new YearMonth(9999,8),
                 new YearMonth(1030,7),
                 new YearMonth(2101,1),
                 new YearMonth(2000,12),
             };
             // 2の解答
-            ShowArray(wYearMonthArray);
+            ShowCollection(wYearMonthArray);
             Console.WriteLine("--------------------------");
             // 4の解答
             Show21Century(wYearMonthArray);
             Console.WriteLine("--------------------------");
             // 5の解答
-            ShowArray(wYearMonthArray.Select(x => x.GetAfterOneMonth()).ToArray());
+            ShowCollection(wYearMonthArray.Select(x => x.GetAfterOneMonth()));
             Console.WriteLine("--------------------------");
             Show21Century(wYearMonthArray.Select(x => x.GetAfterOneMonth()).ToArray());
             Console.WriteLine("\n終了するには何かキーを押してください...");
@@ -50,7 +51,7 @@ namespace Practice4_2 {
         /// 配列の要素をコンソールに出力する
         /// </summary>
         /// <param name="vYearMonths">YearMonthオブジェクトを持つ配列</param>
-        static void ShowArray(YearMonth[] vYearMonths) {
+        static void ShowCollection<T>(IEnumerable<T> vYearMonths) {
             foreach (var wYearMonth in vYearMonths) {
                 Console.WriteLine(wYearMonth);
             }
@@ -61,14 +62,8 @@ namespace Practice4_2 {
         /// </summary>
         /// <param name="vYearMonths">YearMonthオブジェクトを持つ配列</param>
         /// <returns>最初に見つかった21世紀のYearMonthオブジェクト ※見つからなかった場合は、nullを返す</returns>
-        static YearMonth Search21Century(YearMonth[] vYearMonths) {
-            foreach (var wYearMonth in vYearMonths) {
-                if (wYearMonth.Check21Century) {
-                    return wYearMonth;
-                }
-            }
-            return null;
-        }
+        static YearMonth Search21Century(YearMonth[] vYearMonths) => vYearMonths.FirstOrDefault(x => x.Is21Century);
+
         // 4の解答
         /// <summary>
         /// 最初に見つかった21世紀のデータの年を表示する
@@ -78,7 +73,9 @@ namespace Practice4_2 {
             var wFirst21Century = Search21Century(vYearMonths);
             if (wFirst21Century != null) {
                 Console.WriteLine(wFirst21Century.Year);
-            } else { Console.WriteLine("21世紀のデータはありません"); }
+            } else {
+                Console.WriteLine("21世紀のデータはありません");
+            }
         }
     }
 }
