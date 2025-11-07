@@ -43,14 +43,17 @@ namespace Practice4_2 {
             ShowCollection(wYearMonthArray.Select(x => x.GetAfterOneMonth()));
             Console.WriteLine("--------------------------");
             Show21Century(wYearMonthArray.Select(x => x.GetAfterOneMonth()).ToArray());
+            // 追加問題
+            ShowIsLeapYear(wYearMonthArray);
             Console.WriteLine("\n終了するには何かキーを押してください...");
             Console.ReadKey();
         }
         // 2の解答
         /// <summary>
-        /// 配列の要素をコンソールに出力する
+        /// コレクションの要素をコンソールに出力する
         /// </summary>
-        /// <param name="vYearMonths">YearMonthオブジェクトを持つ配列</param>
+        /// <typeparam name="T">任意の型</typeparam>
+        /// <param name="vYearMonths">コレクション</param>
         static void ShowCollection<T>(IEnumerable<T> vYearMonths) {
             foreach (var wYearMonth in vYearMonths) {
                 Console.WriteLine(wYearMonth);
@@ -58,24 +61,27 @@ namespace Practice4_2 {
         }
         // 3の解答
         /// <summary>
-        ///  配列の中の最初に見つかった21世紀のYearMonthオブジェクトを返す
+        ///  最初に見つかった21世紀のYearMonthオブジェクトを返す
         /// </summary>
-        /// <param name="vYearMonths">YearMonthオブジェクトを持つ配列</param>
+        /// <param name="vYearMonths">YearMonthオブジェクト</param>
         /// <returns>最初に見つかった21世紀のYearMonthオブジェクト ※見つからなかった場合は、nullを返す</returns>
-        static YearMonth Search21Century(YearMonth[] vYearMonths) => vYearMonths.FirstOrDefault(x => x.Is21Century);
-
+        static YearMonth Search21Century(IEnumerable<YearMonth> vYearMonths) => vYearMonths.FirstOrDefault(x => x.Is21Century);
         // 4の解答
         /// <summary>
         /// 最初に見つかった21世紀のデータの年を表示する
         /// </summary>
-        /// <param name="vYearMonths">YearMonthオブジェクトを持つ配列</param>
-        static void Show21Century(YearMonth[] vYearMonths) {
+        /// <param name="vYearMonths">YearMonthオブジェクト</param>
+        static void Show21Century(IEnumerable<YearMonth> vYearMonths) {
             var wFirst21Century = Search21Century(vYearMonths);
-            if (wFirst21Century != null) {
-                Console.WriteLine(wFirst21Century.Year);
-            } else {
-                Console.WriteLine("21世紀のデータはありません");
-            }
+            Console.WriteLine(wFirst21Century?.Year.ToString() ?? "21世紀のデータはありません。");
+        }
+        /// <summary>
+        /// 最初に見つかったうるう年のデータの年を表示する
+        /// </summary>
+        /// <param name="vYearMonths">YearMonthオブジェクト</param>
+        static void ShowIsLeapYear(IEnumerable<YearMonth> vYearMonths) {
+            var wFirstLeapYear = vYearMonths.FirstOrDefault(x => x.IsLeapYear);
+            Console.WriteLine(wFirstLeapYear?.Year.ToString() + "年はうるう年です" ?? "うるう年のデータはありません。");
         }
     }
 }

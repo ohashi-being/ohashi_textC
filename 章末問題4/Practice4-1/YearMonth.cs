@@ -14,7 +14,7 @@
  *   12月の時の処理に注意してください。
  * 
  * 4.ToStringメソッドをオーバーライドしてください。
- *   結果は、"2017年8月"といった形式にしてください。 */
+ *   結果は、"yyyy年M月"といった形式にしてください。 */
 
 using System;
 
@@ -29,26 +29,28 @@ namespace Practice4_1 {
         /// 月
         /// </summary>
         public int Month { get; }
+        // 2の解答
+        /// <summary>
+        /// 21世紀かどうかを返す
+        /// </summary>
+        public bool Is21Century => 2001 <= this.Year && this.Year <= 2100;
+        /// <summary>
+        /// うるう年かどうかを返す
+        /// </summary>
+        public bool IsLeapYear => this.Year % 4 == 0 && (this.Year % 100 != 0 || this.Year % 400 == 0);
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="vYear">年</param>
         /// <param name="vMonth">月</param>
         public YearMonth(int vYear, int vMonth) {
-            if (vMonth < 1 || vMonth > 12) {
+            if (vMonth < 1 || vMonth > 12)
                 throw new ArgumentOutOfRangeException(nameof(vMonth), "月は1から12の範囲で指定してください。");
-            }
-            if (vYear < 1 || vYear > 9999) {
+            if (vYear < 1 || vYear > 9999)
                 throw new ArgumentOutOfRangeException(nameof(vYear), "年は1から9999の範囲で指定してください。");
-            }
             this.Year = vYear;
             this.Month = vMonth;
         }
-        // 2の解答
-        /// <summary>
-        /// 21世紀かどうかを返す
-        /// </summary>
-        public bool Is21Century => 2001 <= this.Year && this.Year <= 2100;
         // 3の解答
         /// <summary>
         /// １ヵ月後の年月を取得する
@@ -65,7 +67,7 @@ namespace Practice4_1 {
         /// <summary>
         /// ToStringメソッドをオーバーライドし、形式を変換する
         /// </summary>
-        /// <returns>2017年8月という形式に変換</returns>
-        public override string ToString() => $"{this.Year:D4} 年 {this.Month} 月";
+        /// <returns>yyyy年M月という形式に変換</returns>
+        public override string ToString() => $"{this.Year:D4}年{this.Month}月";
     }
 }
