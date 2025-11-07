@@ -27,7 +27,7 @@ namespace Practice4_2 {
         static void Main(string[] args) {
             // 1の解答
             var wYearMonthArray = new YearMonth[] {
-                new YearMonth(19,4),
+                new YearMonth(1000,4),
                 new YearMonth(9999,8),
                 new YearMonth(1030,7),
                 new YearMonth(2101,1),
@@ -81,7 +81,7 @@ namespace Practice4_2 {
         /// <param name="vYearMonths">YearMonthオブジェクト</param>
         static void ShowIsLeapYear(IEnumerable<YearMonth> vYearMonths) {
             var wFirstLeapYear = vYearMonths.FirstOrDefault(x => x.IsLeapYear);
-            Console.WriteLine(wFirstLeapYear?.Year.ToString() + "年はうるう年です" ?? "うるう年のデータはありません。");
+            Console.WriteLine(wFirstLeapYear != null? $"{wFirstLeapYear.Year}年はうるう年です。":"うるう年のデータはありません");
         }
     }
 }
