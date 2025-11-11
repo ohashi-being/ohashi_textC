@@ -44,10 +44,8 @@ namespace Practice4_1 {
         /// <param name="vYear">年</param>
         /// <param name="vMonth">月</param>
         public YearMonth(int vYear, int vMonth) {
-            if (vMonth < 1 || vMonth > 12)
-                throw new ArgumentOutOfRangeException(nameof(vMonth), "月は1から12の範囲で指定してください。");
-            if (vYear < 1 || vYear > 9999)
-                throw new ArgumentOutOfRangeException(nameof(vYear), "年は1から9999の範囲で指定してください。");
+            if (vMonth < 1 || vMonth > 12) throw new ArgumentOutOfRangeException(nameof(vMonth), "月は1から12の範囲で指定してください。");
+            if (vYear < 1 || vYear > 9999) throw new ArgumentOutOfRangeException(nameof(vYear), "年は1から9999の範囲で指定してください。");
             this.Year = vYear;
             this.Month = vMonth;
         }
