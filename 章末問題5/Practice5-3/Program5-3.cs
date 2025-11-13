@@ -20,7 +20,7 @@ using System.Text;
  */
 
 namespace Practice5_3 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
             var wString = "Jackdaws love my big sphinx of quartz";
             // 1の解答
@@ -52,14 +52,13 @@ namespace Practice5_3 {
         /// <summary>
         /// 空白で区切り、配列に格納した後、StringBuilderクラスを使い文字列を連結させる
         /// </summary>
-        /// <param name="vString">元の文章を空白で分割した文字列の配列</param>
-        static void RebuildString(string[] vStrings) {
+        /// <param name="vStringsArray">元の文章を空白で分割した文字列の配列</param>
+        static void RebuildString(string[] vStringsArray) {
             var wNewString = new StringBuilder();
-            foreach (var wWord in vStrings) {
-                wNewString.Append(wWord);
-                wNewString.Append(' ');
+            for (int i = 0; i < vStringsArray.Length; i++) {
+                wNewString.Append(vStringsArray[i]);
+                if (i < vStringsArray.Length - 1) wNewString.Append(' ');
             }
-            wNewString.Remove(wNewString.Length - 1, 1); // 最後に空白が残るのが気になったので消しました。
             Console.WriteLine(wNewString);
         }
     }

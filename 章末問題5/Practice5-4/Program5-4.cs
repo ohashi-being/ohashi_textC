@@ -12,17 +12,16 @@ using System.Linq;
  */
 
 namespace Practice5_4 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
             var wAuthorInfo = "Novelist=谷崎潤一郎;BestWork=春琴抄;Born=1886";
-            var wStrings = wAuthorInfo.Split(';').Select(x => x.Split('=')[1]);
-            var wAuthorDict = new Dictionary<string, string> {
-                { "谷崎潤一郎" , "作家　" },
-                { "春琴抄" , "代表作" },
-                { "1886" , "誕生年" }
+            var wEnglishLabelToJapanese = new Dictionary<string, string> {
+                { "Novelist" , "作家　" },
+                { "BestWork" , "代表作" },
+                { "Born" , "誕生年" }
             };
-            foreach (var wString in wStrings) {
-                Console.WriteLine($"{wAuthorDict[wString]}:{wString}");
+            foreach (var wInfo in wAuthorInfo.Split(';').Select(x => x.Split('='))) {
+                if (wEnglishLabelToJapanese.TryGetValue(wInfo[0], out var wJapaneseLabel)) Console.WriteLine($"{wJapaneseLabel}：{wInfo[1]}");
             }
         }
     }
