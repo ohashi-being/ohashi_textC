@@ -63,7 +63,7 @@ namespace Practice4_2 {
         /// <summary>
         ///  最初に見つかった21世紀のYearMonthオブジェクトを返す
         /// </summary>
-        /// <param name="vYearMonths">YearMonthオブジェクト</param>
+        /// <param name="vYearMonths">YearMonthのコレクション</param>
         /// <returns>最初に見つかった21世紀のYearMonthオブジェクト ※見つからなかった場合は、nullを返す</returns>
         static YearMonth SearchFirst21Century(IEnumerable<YearMonth> vYearMonths) => vYearMonths.FirstOrDefault(x => x.Is21Century);
         // 4の解答
@@ -81,7 +81,7 @@ namespace Practice4_2 {
         /// <param name="vYearMonths">YearMonthオブジェクト</param>
         static void ShowFirstLeapYear(IEnumerable<YearMonth> vYearMonths) {
             var wFirstLeapYear = vYearMonths.FirstOrDefault(x => x.IsLeapYear);
-            Console.WriteLine(wFirstLeapYear != null? $"{wFirstLeapYear.Year}年はうるう年です。":"うるう年のデータはありません");
+            Console.WriteLine(wFirstLeapYear != null ? $"{wFirstLeapYear.Year}年はうるう年です。" : "うるう年のデータはありません");
         }
     }
 }
