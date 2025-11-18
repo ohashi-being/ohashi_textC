@@ -63,11 +63,11 @@ namespace Practice6_2 {
             Console.WriteLine();
             // 6の解答
             Console.WriteLine("--------------問題6---------------");
-            ShowBookInfoByPriceAscending(wBooks, 400);
+            ShowBookInfoByPriceDescending(wBooks, 400);
             Console.WriteLine();
             // 7の解答
             Console.WriteLine("--------------問題7---------------");
-            ShowBookContainStringAndBelowPages(wBooks, "C#", 400);
+            ShowBookContainStringAndBelowPages(wBooks, "C#", 500);
 
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
@@ -123,7 +123,7 @@ namespace Practice6_2 {
         /// <summary>
         /// 指定された値段以上の本で最初に見つかった書籍のタイトルを表示する
         /// </summary>
-        /// <param name="vBooks">書籍のリスト</</param>
+        /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vPriceThreshold">価格のしきい値</param>
         static void ShowFirstBookTitleAbovePrice(List<Book> vBooks, int vPriceThreshold) {
             var wFirstBookTitleAbovePrice = vBooks.Where(x => x.Price >= vPriceThreshold).Select(x => x.Title).FirstOrDefault();
@@ -138,7 +138,7 @@ namespace Practice6_2 {
         /// <summary>
         /// 指定された値段未満の書籍の中で最大のページ数を表示する
         /// </summary>
-        /// <param name="vBooks">書籍のリスト</</param>
+        /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vPriceThreshold">価格のしきい値</param>
         static void ShowMaxBookPagesBelowPrice(List<Book> vBooks, int vPriceThreshold) {
             var wBookPagesBelowPrice = vBooks.Where(x => x.Price < vPriceThreshold);
@@ -148,7 +148,6 @@ namespace Practice6_2 {
             } else {
                 Console.WriteLine($"価格が{vPriceThreshold}未満の書籍はありません");
             }
-            
         }
         // 6の解答
         /// <summary>
@@ -165,12 +164,12 @@ namespace Practice6_2 {
         /// </summary>
         /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vPageThreshold">ページ数のしきい値</param>
-        static void ShowBookInfoByPriceAscending(List<Book> vBooks, int vPageThreshold) {
-            var wBookInfoAscending = GetBookInfoAbovePages(vBooks, vPageThreshold).OrderByDescending(x => x.Price);
-            if (wBookInfoAscending.Any()) {
-                Console.WriteLine($"ページ数が{vPageThreshold}以上の書籍は以下の{wBookInfoAscending.Count()}冊です");
+        static void ShowBookInfoByPriceDescending(List<Book> vBooks, int vPageThreshold) {
+            var wBookInfoDescending = GetBookInfoAbovePages(vBooks, vPageThreshold).OrderByDescending(x => x.Price);
+            if (wBookInfoDescending.Any()) {
+                Console.WriteLine($"ページ数が{vPageThreshold}以上の書籍は以下の{wBookInfoDescending.Count()}冊です");
                 Console.WriteLine();
-                foreach (var wBookInfo in wBookInfoAscending) {
+                foreach (var wBookInfo in wBookInfoDescending) {
                     Console.WriteLine($"{wBookInfo.Title}、値段：{wBookInfo.Price}円");
                 }
             } else {
@@ -193,7 +192,7 @@ namespace Practice6_2 {
             var wBookBelowPages = vBooks.Where(x => x.Pages <= vPageThreshold);
             if (!wBookBelowPages.Any()) {
                 Console.WriteLine($"ページ数が{vPageThreshold}以下の書籍は見つかりませんでした。");
-                return ;
+                return;
             }
             var wBookContainStringAndBelowPages = wBookContainString.Where(x => x.Pages <= vPageThreshold);
             Console.WriteLine($"タイトルに「{vSearchString}」を含み、ページ数が{vPageThreshold}以下の書籍は以下の{wBookContainStringAndBelowPages.Count()}冊です");
