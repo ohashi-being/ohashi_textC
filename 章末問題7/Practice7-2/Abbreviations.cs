@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Practice7_2 {
     /// <summary>
@@ -11,13 +12,18 @@ namespace Practice7_2 {
         /// <summary>
         /// 省略語（キー）と日本語訳（値）を保持するディクショナリ
         /// </summary>
-        private Dictionary<string, string> FAbbrToJapanese = new Dictionary<string, string>();
+        private Dictionary<string, string> FAbbreviationToJapanese = new Dictionary<string, string>();
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public Abbreviations() {
-            var wReadLines = File.ReadAllLines(@"..\..\Abbreviations.txt");
-            this.FAbbrToJapanese = wReadLines.Select(x => x.Split('='))
+            string wExeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string wfFilePath = Path.Combine(wExeDir, "Abbreviations.txt");
+            if (!File.Exists(wfFilePath)) {
+                throw new FileNotFoundException($"ファイルが存在しません: {wfFilePath}");
+            }
+            var wReadLines = File.ReadAllLines(wfFilePath);
+            this.FAbbreviationToJapanese = wReadLines.Select(x => x.Split('='))
                          .ToDictionary(x => x[0], x => x[1]);
         }
         // 以下自身で作成しました
@@ -25,24 +31,25 @@ namespace Practice7_2 {
         /// <summary>
         /// ディクショナリに格納されている省略語の総数
         /// </summary>
-        public int Count { get { return FAbbrToJapanese.Count; } }
+        public int Count => FAbbreviationToJapanese.Count;
         // 2の解答
         /// <summary>
         /// 指定した省略語のデータを削除する
         /// </summary>
-        /// <param name="vRemoveAbbr">削除したい省略語</param>
+        /// <param name="vRemoveAbbreviation">削除したい省略語</param>
         /// <returns>削除が成功した場合は true、見つからなかった場合は false</returns>
-        public bool Remove(string vRemoveAbbr) {
-            return FAbbrToJapanese.Remove(vRemoveAbbr);
+        public bool Remove(string vRemoveAbbreviation) {
+            if (string.IsNullOrEmpty(vRemoveAbbreviation)) return false;
+            return FAbbreviationToJapanese.Remove(vRemoveAbbreviation);
         }
         // 4の解答
         /// <summary>
         /// 指定した文字数の省略語のみ表示する
         /// </summary>
-        /// <param name="vAbbrLength">調べたい文字数</param>
-        public void ShowAbbreviationsByLength(int vAbbrLength) {
-            foreach (var item in FAbbrToJapanese.Where(x => x.Key.Length == vAbbrLength)) {
-                Console.WriteLine($"{item.Key}={item.Value}");
+        /// <param name="vAbbreviationLength">調べたい文字数</param>
+        public void ShowAbbreviationsByLength(int vAbbreviationLength) {
+            foreach (var wAbbreviation in FAbbreviationToJapanese.Where(x => x.Key.Length == vAbbreviationLength)) {
+                Console.WriteLine($"{wAbbreviation.Key}={wAbbreviation.Value}");
             }
         }
     }

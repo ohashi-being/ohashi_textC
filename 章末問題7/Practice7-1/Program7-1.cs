@@ -21,45 +21,34 @@ namespace Practice7_1 {
         static void Main(string[] args) {
             var wString = "Cozy lummox gives smart squid who asks for job pen";
             Console.WriteLine("----------解答1----------");
-            ShowAlphabetFreq1(wString);
-            Console.WriteLine("----------解答2----------");
-            ShowAlphabetFreq2(wString);
-        }
-        /// <summary>
-        /// 各アルファベットが何文字含まれるか表示する
-        /// </summary>
-        /// <param name="vString">出現頻度を数える対象の文字列</param>
-        static void ShowAlphabetFreq1(string vString) {
             var wDict = new Dictionary<char, int>();
-            foreach (var wWord in vString) {
-                var wUpperWord = char.ToUpper(wWord);
-                if ('A' <= wUpperWord && wUpperWord <= 'Z') {
-                    if (wDict.ContainsKey(wUpperWord))
-                        wDict[wUpperWord]++;
-                    else
-                        wDict[wUpperWord] = 1;
-                }
-            }
-            foreach (var wWord in wDict.OrderBy(x => x.Key)) {
-                Console.WriteLine($"'{wWord.Key}':{wWord.Value}");
-            } 
+            ShowDictionary(CountAlphabetFrequencyDict(wString, wDict).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value));
+            Console.WriteLine("----------解答2----------");
+            ShowDictionary(CountAlphabetFrequencyDict(wString, new SortedDictionary<char, int>()));
         }
         /// <summary>
-        /// 各アルファベットが何文字含まれるか表示する
+        /// 各アルファベットが何文字含まれるかカウントする
         /// </summary>
         /// <param name="vString">出現頻度を数える対象の文字列</param>
-        static void ShowAlphabetFreq2(string vString) {
-            var wDict = new SortedDictionary<char, int>();
+        /// /// <returns>アルファベットとその出現回数のディクショナリ</returns>
+        static IDictionary<char, int> CountAlphabetFrequencyDict(string vString, IDictionary<char, int> vDict) {
             foreach (var wWord in vString) {
                 var wUpperWord = char.ToUpper(wWord);
                 if ('A' <= wUpperWord && wUpperWord <= 'Z') {
-                    if (wDict.ContainsKey(wUpperWord))
-                        wDict[wUpperWord]++;
+                    if (vDict.TryGetValue(wUpperWord, out var wCount))
+                        vDict[wUpperWord] = wCount + 1;
                     else
-                        wDict[wUpperWord] = 1;
+                        vDict[wUpperWord] = 1;
                 }
             }
-            foreach (var wWord in wDict) {
+            return vDict;
+        }
+        /// <summary>
+        /// ディクショナリのキーと値を表示する
+        /// </summary>
+        /// <param name="vFrequencyDict">アルファベットとその出現回数のディクショナリ</param>
+        static void ShowDictionary(IEnumerable<KeyValuePair<char, int>> vFrequencyDict) {
+            foreach (var wWord in vFrequencyDict) {
                 Console.WriteLine($"'{wWord.Key}':{wWord.Value}");
             }
         }

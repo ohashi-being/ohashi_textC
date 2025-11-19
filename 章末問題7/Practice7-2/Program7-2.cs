@@ -19,13 +19,13 @@ IMF=国際通貨基金
 namespace Practice7_2 {
     internal class Program {
         static void Main(string[] args) {
-            var abbrs = new Abbreviations();
+            var wAbbreviations = new Abbreviations();
             Console.WriteLine("----------解答1----------");
-            Console.WriteLine(abbrs.Count);
+            Console.WriteLine(wAbbreviations.Count);
             Console.WriteLine("----------解答2----------");
-            Console.WriteLine(abbrs.Remove("IMF"));
+            Console.WriteLine(wAbbreviations.Remove("IMF"));
             Console.WriteLine("----------解答4----------");
-            abbrs.ShowAbbreviationsByLength(3);
+            wAbbreviations.ShowAbbreviationsByLength(3);
         }
     }
 }
