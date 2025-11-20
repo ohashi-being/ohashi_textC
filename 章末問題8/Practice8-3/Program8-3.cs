@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 
 /* 問題8.3
@@ -17,9 +18,9 @@ namespace Practice8_3 {
     internal class Program {
         static void Main(string[] args) {
             var wTimeWatch = new TimeWatch();
-            wTimeWatch.Start();
             Console.WriteLine("処理中...");
             Thread.Sleep(3000);
+
             TimeSpan wProcessingTime = wTimeWatch.Stop();
             Console.WriteLine($"処理時間は{wProcessingTime.TotalMilliseconds}ミリ秒でした");
         }

@@ -10,17 +10,32 @@ namespace Practice8_3 {
         /// </summary>
         private DateTime FStartTime;
         /// <summary>
-        /// 処理時間の計測を開始する
+        /// 経過時間
+        /// </summary>
+        private TimeSpan FElapsedTime = TimeSpan.Zero;
+        /// <summary>
+        /// 計測中かどうか
+        /// </summary>
+        private bool FIsRunning = false;
+        /// <summary>
+        /// 処理時間の計測を開始または再開する
         /// </summary>
         public void Start() {
-            FStartTime = DateTime.Now;
+            if (!FIsRunning) {
+                FStartTime = DateTime.Now;
+                FIsRunning = true;
+            }
         }
         /// <summary>
         /// 開始からの経過時間を返す
         /// </summary>
         /// <returns>処理時間</returns>
         public TimeSpan Stop() {
-            return DateTime.Now - FStartTime;
+            if (FIsRunning) {
+                FElapsedTime = DateTime.Now - FStartTime;
+                FIsRunning = false;
+            }
+            return FElapsedTime;
         }
     }
 }

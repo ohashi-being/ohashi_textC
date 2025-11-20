@@ -17,7 +17,7 @@ namespace Practice8_1 {
             Console.WriteLine(wToday.ToString("yyyy年MM月dd日 HH時mm分ss秒"));
             var wJapanInfo = new CultureInfo("ja-JP");
             wJapanInfo.DateTimeFormat.Calendar = new JapaneseCalendar();
-            Console.WriteLine(wToday.ToString("ggyy年M月dd日(ddd)",wJapanInfo));
+            Console.WriteLine($"{wToday.ToString("ggyy年", wJapanInfo)}{wToday.Month.ToString().PadLeft(2, ' ')}月{wToday.ToString("dd日(ddd)")}");
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
