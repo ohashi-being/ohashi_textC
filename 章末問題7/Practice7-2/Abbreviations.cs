@@ -17,12 +17,9 @@ namespace Practice7_2 {
         /// コンストラクタ
         /// </summary>
         public Abbreviations() {
-            string wExeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string wfFilePath = Path.Combine(wExeDir, "Abbreviations.txt");
-            if (!File.Exists(wfFilePath)) {
-                throw new FileNotFoundException($"ファイルが存在しません: {wfFilePath}");
-            }
-            var wReadLines = File.ReadAllLines(wfFilePath);
+            string wFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Abbreviations.txt");
+            if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
+            var wReadLines = File.ReadAllLines(wFilePath);
             this.FAbbreviationToJapanese = wReadLines.Select(x => x.Split('='))
                          .ToDictionary(x => x[0], x => x[1]);
         }

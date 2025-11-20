@@ -22,16 +22,16 @@ namespace Practice7_1 {
             var wString = "Cozy lummox gives smart squid who asks for job pen";
             Console.WriteLine("----------解答1----------");
             var wDict = new Dictionary<char, int>();
-            ShowDictionary(CountAlphabetFrequencyDict(wString, wDict).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value));
+            ShowDictionary(CountAlphabetFrequency(wString, wDict).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value));
             Console.WriteLine("----------解答2----------");
-            ShowDictionary(CountAlphabetFrequencyDict(wString, new SortedDictionary<char, int>()));
+            ShowDictionary(CountAlphabetFrequency(wString, new SortedDictionary<char, int>()));
         }
         /// <summary>
         /// 各アルファベットが何文字含まれるかカウントする
         /// </summary>
         /// <param name="vString">出現頻度を数える対象の文字列</param>
         /// /// <returns>アルファベットとその出現回数のディクショナリ</returns>
-        static IDictionary<char, int> CountAlphabetFrequencyDict(string vString, IDictionary<char, int> vDict) {
+        static IDictionary<char, int> CountAlphabetFrequency(string vString, IDictionary<char, int> vDict) {
             foreach (var wWord in vString) {
                 var wUpperWord = char.ToUpper(wWord);
                 if ('A' <= wUpperWord && wUpperWord <= 'Z') {
