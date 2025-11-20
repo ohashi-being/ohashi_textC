@@ -2,7 +2,7 @@
 
 namespace Practice8_3 {
     /// <summary>
-    /// 
+    /// 経過時間の計測を行う
     /// </summary>
     public class TimeWatch {
         /// <summary>
