@@ -8,7 +8,7 @@ namespace Practice7_2 {
     /// <summary>
     /// 省略語と日本語訳を管理するクラス
     /// </summary>
-    internal class Abbreviations {
+    class Abbreviations {
         /// <summary>
         /// 省略語（キー）と日本語訳（値）を保持するディクショナリ
         /// </summary>

@@ -17,12 +17,11 @@ using System.Linq;
 2.上記プログラムを、SortedDictionary<Tkey,TValue>を使って書き換えてください。
 */
 namespace Practice7_1 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
             var wString = "Cozy lummox gives smart squid who asks for job pen";
             Console.WriteLine("----------解答1----------");
-            var wDict = new Dictionary<char, int>();
-            ShowDictionary(CountAlphabetFrequency(wString, wDict).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value));
+            ShowDictionary(CountAlphabetFrequency(wString).OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value));
             Console.WriteLine("----------解答2----------");
             ShowDictionary(CountAlphabetFrequency(wString, new SortedDictionary<char, int>()));
         }
@@ -30,7 +29,8 @@ namespace Practice7_1 {
         /// 各アルファベットが何文字含まれるかカウントする
         /// </summary>
         /// <param name="vString">出現頻度を数える対象の文字列</param>
-        /// /// <returns>アルファベットとその出現回数のディクショナリ</returns>
+        /// <param name="vDict">出現頻度の書き込み先となる辞書</param>
+        /// <returns>アルファベットとその出現回数のディクショナリ</returns>
         static IDictionary<char, int> CountAlphabetFrequency(string vString, IDictionary<char, int> vDict) {
             foreach (var wWord in vString) {
                 var wUpperWord = char.ToUpper(wWord);
@@ -42,6 +42,14 @@ namespace Practice7_1 {
                 }
             }
             return vDict;
+        }
+        /// <summary>
+        /// 各アルファベットが何文字含まれるかカウントする（辞書を自動生成）
+        /// </summary>
+        /// <param name="vString">出現頻度を数える対象の文字列</param>
+        /// <returns>アルファベットとその出現回数のディクショナリ</returns>
+        static Dictionary<char, int> CountAlphabetFrequency(string vString) {
+            return (Dictionary<char, int>)CountAlphabetFrequency(vString, new Dictionary<char, int>());
         }
         /// <summary>
         /// ディクショナリのキーと値を表示する

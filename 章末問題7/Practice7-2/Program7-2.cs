@@ -17,7 +17,7 @@ IMF=国際通貨基金
 
 */
 namespace Practice7_2 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
             var wAbbreviations = new Abbreviations();
             Console.WriteLine("----------解答1----------");
