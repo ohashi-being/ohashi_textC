@@ -33,7 +33,7 @@ namespace Practice6_2 {
     internal class Program {
         static void Main(string[] args) {
             var wBooks = new List<Book> {
-               new Book ("C#プログラミングの新常識" , 3800 , 378 ),
+               new Book ("C#プログラミングの新常識" , 3800 , 378),
                new Book ( "ラムダ式とLINQの極意" , 2500 , 312),
                new Book ("ワンダフル・C#ライフ" , 2900 , 385),
                new Book ("一人で学ぶ並列処理プログラミング" , 4800 , 464),
@@ -93,7 +93,7 @@ namespace Practice6_2 {
         /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vSearchString">調べたい文字列</param>
         static void CountBookContainString(List<Book> vBooks, string vSearchString) {
-            var wBookContainString = vBooks.Where(x => x.Title.Contains(vSearchString));
+            var wBookContainString = vBooks.Where(x => x.Title.Contains(vSearchString)).ToList();
             var wCountBookContainString = wBookContainString.Count();
             if (wCountBookContainString > 0) {
                 Console.WriteLine($"タイトルに「{vSearchString}」を含む書籍は以下の{wCountBookContainString}冊です");
@@ -112,7 +112,7 @@ namespace Practice6_2 {
         /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vSearchString">調べたい文字列</param>
         static void ShowAveragePagesContainString(List<Book> vBooks, string vSearchString) {
-            var wBookContainString = vBooks.Where(x => x.Title.Contains(vSearchString));
+            var wBookContainString = vBooks.Where(x => x.Title.Contains(vSearchString)).ToList();
             if (wBookContainString.Any()) {
                 Console.WriteLine($"タイトルに「{vSearchString}」が含まれている書籍の平均ページ数は{(int)Math.Round(wBookContainString.Average(x => x.Pages))}ページです");
             } else {
@@ -141,7 +141,7 @@ namespace Practice6_2 {
         /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vPriceThreshold">価格のしきい値</param>
         static void ShowMaxBookPagesBelowPrice(List<Book> vBooks, int vPriceThreshold) {
-            var wBookPagesBelowPrice = vBooks.Where(x => x.Price < vPriceThreshold);
+            var wBookPagesBelowPrice = vBooks.Where(x => x.Price < vPriceThreshold).ToList();
             if (wBookPagesBelowPrice.Any()) {
                 var wMaxBookPagesBelowPrice = wBookPagesBelowPrice.Max(x => x.Pages);
                 Console.WriteLine($"価格が{vPriceThreshold}未満の書籍の中で最大のページ数は{wMaxBookPagesBelowPrice}ページです");
@@ -184,21 +184,22 @@ namespace Practice6_2 {
         /// <param name="vSearchString">調べたい文字列</param>
         /// <param name="vPageThreshold">ページ数のしきい値</param>
         static void ShowBookContainStringAndBelowPages(List<Book> vBooks, string vSearchString, int vPageThreshold) {
+            var wBookContainStringAndBelowPages = vBooks.Where(x => x.Title.Contains(vSearchString) && x.Pages <= vPageThreshold).ToList();
+            if (wBookContainStringAndBelowPages.Any()) {
+                Console.WriteLine($"タイトルに「{vSearchString}」を含み、ページ数が{vPageThreshold}以下の書籍は以下の{wBookContainStringAndBelowPages.Count()}冊です");
+                Console.WriteLine();
+                foreach (var wBook in wBookContainStringAndBelowPages) {
+                    Console.WriteLine(wBook.Title);
+                }
+                return;
+            }
             var wBookContainString = vBooks.Where(x => x.Title.Contains(vSearchString));
             if (!wBookContainString.Any()) {
                 Console.WriteLine($"タイトルに「{vSearchString}」を含む書籍は見つかりませんでした。");
-                return;
             }
             var wBookBelowPages = vBooks.Where(x => x.Pages <= vPageThreshold);
             if (!wBookBelowPages.Any()) {
                 Console.WriteLine($"ページ数が{vPageThreshold}以下の書籍は見つかりませんでした。");
-                return;
-            }
-            var wBookContainStringAndBelowPages = wBookContainString.Where(x => x.Pages <= vPageThreshold);
-            Console.WriteLine($"タイトルに「{vSearchString}」を含み、ページ数が{vPageThreshold}以下の書籍は以下の{wBookContainStringAndBelowPages.Count()}冊です");
-            Console.WriteLine();
-            foreach (var wBook in wBookContainStringAndBelowPages) {
-                Console.WriteLine(wBook.Title);
             }
         }
     }
