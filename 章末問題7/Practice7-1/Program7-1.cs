@@ -33,12 +33,12 @@ namespace Practice7_1 {
         /// <returns>アルファベットとその出現回数の辞書</returns>
         static IDictionary<char, int> CountAlphabetFrequency(string vString, IDictionary<char, int> vDict) {
             foreach (var wChar in vString) {
-                var wUpperWord = char.ToUpper(wChar);
-                if ('A' <= wUpperWord && wUpperWord <= 'Z') {
-                    if (vDict.TryGetValue(wUpperWord, out var wCount))
-                        vDict[wUpperWord] = wCount + 1;
+                var wUpperChar = char.ToUpper(wChar);
+                if ('A' <= wUpperChar && wUpperChar <= 'Z') {
+                    if (vDict.TryGetValue(wUpperChar, out var wCount))
+                        vDict[wUpperChar] = wCount + 1;
                     else
-                        vDict[wUpperWord] = 1;
+                        vDict[wUpperChar] = 1;
                 }
             }
             return vDict;
