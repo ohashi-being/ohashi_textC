@@ -32,8 +32,8 @@ namespace Practice7_1 {
         /// <param name="vDict">出現頻度の書き込み先となる辞書</param>
         /// <returns>アルファベットとその出現回数の辞書</returns>
         static IDictionary<char, int> CountAlphabetFrequency(string vString, IDictionary<char, int> vDict) {
-            foreach (var wWord in vString) {
-                var wUpperWord = char.ToUpper(wWord);
+            foreach (var wChar in vString) {
+                var wUpperWord = char.ToUpper(wChar);
                 if ('A' <= wUpperWord && wUpperWord <= 'Z') {
                     if (vDict.TryGetValue(wUpperWord, out var wCount))
                         vDict[wUpperWord] = wCount + 1;
