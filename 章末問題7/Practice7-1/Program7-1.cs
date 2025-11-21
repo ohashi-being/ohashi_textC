@@ -30,7 +30,7 @@ namespace Practice7_1 {
         /// </summary>
         /// <param name="vString">出現頻度を数える対象の文字列</param>
         /// <param name="vDict">出現頻度の書き込み先となる辞書</param>
-        /// <returns>アルファベットとその出現回数のディクショナリ</returns>
+        /// <returns>アルファベットとその出現回数の辞書</returns>
         static IDictionary<char, int> CountAlphabetFrequency(string vString, IDictionary<char, int> vDict) {
             foreach (var wWord in vString) {
                 var wUpperWord = char.ToUpper(wWord);
@@ -47,17 +47,17 @@ namespace Practice7_1 {
         /// 各アルファベットが何文字含まれるかカウントする（辞書を自動生成）
         /// </summary>
         /// <param name="vString">出現頻度を数える対象の文字列</param>
-        /// <returns>アルファベットとその出現回数のディクショナリ</returns>
-        static Dictionary<char, int> CountAlphabetFrequency(string vString) {
-            return (Dictionary<char, int>)CountAlphabetFrequency(vString, new Dictionary<char, int>());
+        /// <returns>アルファベットとその出現回数の辞書</returns>
+        static IDictionary<char, int> CountAlphabetFrequency(string vString) {
+            return CountAlphabetFrequency(vString, new Dictionary<char, int>());
         }
         /// <summary>
         /// ディクショナリのキーと値を表示する
         /// </summary>
         /// <param name="vFrequencyDict">アルファベットとその出現回数のディクショナリ</param>
         static void ShowDictionary(IEnumerable<KeyValuePair<char, int>> vFrequencyDict) {
-            foreach (var wWord in vFrequencyDict) {
-                Console.WriteLine($"'{wWord.Key}':{wWord.Value}");
+            foreach (var wChar in vFrequencyDict) {
+                Console.WriteLine($"'{wChar.Key}':{wChar.Value}");
             }
         }
     }
