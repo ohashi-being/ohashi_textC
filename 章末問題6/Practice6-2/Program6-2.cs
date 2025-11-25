@@ -163,11 +163,11 @@ namespace Practice6_2 {
         /// <param name="vBooks">書籍のリスト</param>
         /// <param name="vPageThreshold">ページ数のしきい値</param>
         static void ShowBookInfoByPriceDescending(List<Book> vBooks, int vPageThreshold) {
-            var wBookInfoDescending = GetBookInfoAbovePages(vBooks, vPageThreshold).OrderByDescending(x => x.Price);
+            var wBookInfoDescending = GetBookInfoAbovePages(vBooks, vPageThreshold).OrderByDescending(x => x.Price).ToList();
             if (wBookInfoDescending.Any()) {
-                Console.WriteLine($"ページ数が{vPageThreshold}以上の書籍は以下の{wBookInfoDescending.Count()}冊です");
+                Console.WriteLine($"ページ数が{vPageThreshold}以上の書籍は以下の{wBookInfoDescending.Count}冊です");
                 Console.WriteLine();
-                foreach (var wBookInfo in wBookInfoDescending.ToList()) {
+                foreach (var wBookInfo in wBookInfoDescending) {
                     Console.WriteLine($"{wBookInfo.Title}、値段：{wBookInfo.Price}円");
                 }
             } else {
@@ -182,11 +182,11 @@ namespace Practice6_2 {
         /// <param name="vSearchString">調べたい文字列</param>
         /// <param name="vPageThreshold">ページ数のしきい値</param>
         static void ShowBookContainStringAndBelowPages(List<Book> vBooks, string vSearchString, int vPageThreshold) {
-            var wBookContainStringAndBelowPages = vBooks.Where(x => x.Title.Contains(vSearchString) && x.Pages <= vPageThreshold);
+            var wBookContainStringAndBelowPages = vBooks.Where(x => x.Title.Contains(vSearchString) && x.Pages <= vPageThreshold).ToList();
             if (wBookContainStringAndBelowPages.Any()) {
-                Console.WriteLine($"タイトルに「{vSearchString}」を含み、ページ数が{vPageThreshold}以下の書籍は以下の{wBookContainStringAndBelowPages.Count()}冊です");
+                Console.WriteLine($"タイトルに「{vSearchString}」を含み、ページ数が{vPageThreshold}以下の書籍は以下の{wBookContainStringAndBelowPages.Count}冊です");
                 Console.WriteLine();
-                foreach (var wBook in wBookContainStringAndBelowPages.ToList()) {
+                foreach (var wBook in wBookContainStringAndBelowPages) {
                     Console.WriteLine(wBook.Title);
                 }
                 return;
