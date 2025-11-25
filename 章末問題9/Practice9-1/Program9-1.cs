@@ -17,7 +17,7 @@ using System.Reflection;
 */
 namespace Practice9_1 {
     class Program {
-        static void Main(string[] vArgs) {
+        static void Main(string[] args) {
             string wExeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string wFilePath = Path.Combine(wExeDir, "Program9-1.cs");
             if (!File.Exists(wFilePath)) {
