@@ -40,9 +40,7 @@ namespace Practice6_1 {
         /// <returns>配列に要素がある場合は「最大値は○○です」という文字列、
         /// 配列が空の場合は「要素が見つかりません」という文字列</returns>
         static string GetMaxNumber(int[] vNumbers) {
-            if (vNumbers == null || !vNumbers.Any()) {
-                return $"要素が見つかりません";
-            }
+            if (vNumbers == null || !vNumbers.Any())  return "要素が見つかりません";
             return $"最大値は{vNumbers.Max()}です";
         }
     }
