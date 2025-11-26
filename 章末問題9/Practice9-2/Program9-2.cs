@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 /* 問題9.2
@@ -14,6 +15,8 @@ namespace Practice9_2 {
             var wReadLines = File.ReadAllLines(wFilePath);
             File.WriteAllLines(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Abbreviations_Numbered.txt"),
                 wReadLines.Select((x, y) => $"{y + 1,2}: {x}"));
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
     }
 }

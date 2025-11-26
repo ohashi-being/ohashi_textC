@@ -26,6 +26,8 @@ namespace Practice9_1 {
             CountClassWithStreamReader(wFilePath, " class ");
             CountClassWithReadAllLines(wFilePath, " class ");
             CountClassWithReadLines(wFilePath, " class ");
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
         /// <summary>
         ///StreamReaderクラスを使用し、ファイルを読み込み、指定した文字列が含まれる行数をカウントします。
