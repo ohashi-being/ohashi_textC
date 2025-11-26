@@ -19,8 +19,9 @@ namespace Practice8_3 {
         /// <returns>処理時間</returns>
         public TimeSpan Stop() {
             if (FStartTime != default) {
+                var wElapsed = DateTime.Now - FStartTime;
                 FStartTime = default;
-                return DateTime.Now - FStartTime;
+                return wElapsed;
             }
             return TimeSpan.Zero;
         }

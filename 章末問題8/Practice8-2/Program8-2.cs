@@ -12,17 +12,19 @@ namespace Practice8_2 {
             while (true) {
                 Console.WriteLine("次の週の日付を知りたい曜日を漢字一字で入力してください（例：月、火、水）:");
                 var wInputDay = Console.ReadLine();
-                var wResult = TryGetNextWeekDay(DateTime.Today , wInputDay);
+                var wResult = TryGetNextWeekDay(DateTime.Today, wInputDay);
                 if (wResult.Success) {
                     Console.WriteLine($"次の週の{wInputDay}曜日は{wResult.NextDate.Month}月{wResult.NextDate.Day}日");
                     break;
-                } else Console.WriteLine("入力が正しくありません。漢字一字で入力してください。");
+                } else {
+                    Console.WriteLine("入力が正しくありません。漢字一字で入力してください。");
+                }
             }
         }
         /// <summary>
         /// 日本語の曜日表記をDayOfWeek列挙型に変換するためのディクショナリ
         /// </summary>
-        static readonly Dictionary<string, DayOfWeek> wJpWeek = new Dictionary<string, DayOfWeek>{
+        static readonly Dictionary<string, DayOfWeek> FJapaneseWeekToDayOfWeek = new Dictionary<string, DayOfWeek>{
             {"日", DayOfWeek.Sunday},
             {"月", DayOfWeek.Monday},
             {"火", DayOfWeek.Tuesday},
@@ -38,11 +40,9 @@ namespace Practice8_2 {
         /// <param name="vInput">入力された日本語の曜日表記</param>
         /// <returns>変換可能か、次の週の指定曜日の日付</returns>
         static (bool Success, DateTime NextDate) TryGetNextWeekDay(DateTime vBaseDate, string vInput) {
-            if (!wJpWeek.TryGetValue(vInput, out var wDayOfWeek))
+            if (!FJapaneseWeekToDayOfWeek.TryGetValue(vInput, out var wDayOfWeek))
                 return (false, default);
             var wNextweekDate = vBaseDate.AddDays(wDayOfWeek - vBaseDate.DayOfWeek + 7);
-            var wJapanInfo = new CultureInfo("ja-JP");
-            wJapanInfo.DateTimeFormat.Calendar = new JapaneseCalendar();
             return (true, wNextweekDate);
         }
     }
