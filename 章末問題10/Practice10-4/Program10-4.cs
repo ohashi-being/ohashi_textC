@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Text.RegularExpressions;
 /* 問題10.4
 テキストファイルを読み込み、version="v4.0"と書かれた箇所を、version="v5.0"に置き換え、同じファイルに保存してください。
 なお、入力ファイルの=の前後には任意の数の空白文字が入っていることもあります。
@@ -12,6 +12,26 @@ using System.Threading.Tasks;
 namespace Practice10_4 {
     internal class Program {
         static void Main(string[] args) {
+            string wFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "sample.txt");
+            if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
+            var wLines = File.ReadAllLines(wFilePath);
+            File.WriteAllLines(wFilePath, wLines.Select(x => ReplaceVersionString(x)).ToArray());
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
+        }
+        /// <summary>
+        /// 文字列内のversion="v4.0"をversion="v5.0"に置き換える
+        /// </summary>
+        /// <param name="vLine">処理対象の文字列</param>
+        /// <returns>置換後の文字列</returns>
+        static string ReplaceVersionString(string vLine) {
+            var wReplaced = Regex.Replace(vLine, @"\b(version)\s*=\s*""v4\.0""", @"version=""v5.0""", RegexOptions.IgnoreCase);
+            if (vLine != wReplaced) {
+                Console.WriteLine($"変換:{vLine} → {wReplaced}");
+            } else {
+                Console.WriteLine($"対象外: {vLine}");
+            }
+            return wReplaced;
         }
     }
 }
