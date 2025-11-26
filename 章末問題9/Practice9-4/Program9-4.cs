@@ -9,12 +9,15 @@ namespace Practice9_4 {
     class Program {
         static void Main(string[] args) {
             if (args.Length <= 1) {
+                Console.WriteLine("エラー：引数が不足しています。");
                 Console.WriteLine("入力方法 : Practice9_4.exe <元となるディレクトリ> <コピーするディレクトリ>");
                 return;
             }
             var wSourceDir = args[0];
             var wDestDir = args[1];
             CopyFiles(wSourceDir, wDestDir);
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
         /// <summary>
         /// 元となるディレクトリ直下のファイルをコピー先ディレクトリにコピーする

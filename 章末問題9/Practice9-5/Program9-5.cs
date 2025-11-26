@@ -12,15 +12,18 @@ namespace Practice9_5 {
         private const long C_MegaBite = 1024 * 1024;
         static void Main(string[] args) {
             if (args.Length == 0) {
+                Console.WriteLine("エラー：引数が不足しています。");
                 Console.WriteLine("入力方法 : Practice9_5.exe <ディレクトリ>");
                 return;
             }
             var wDirectry = args[0];
             if (!Directory.Exists(wDirectry)) {
-                Console.WriteLine($"ディレクトリが存在しません: {wDirectry}");
+                Console.WriteLine($"エラー：ディレクトリが存在しません: {wDirectry}");
                 return;
             }
             ShowLargeFile(wDirectry, 1 * C_MegaBite);
+            Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
+            Console.ReadKey();
         }
         /// <summary>
         /// 指定のディレクトリおよびそのサブディレクトリの配下にあるファイルから基準のファイルサイズ以上のファイル名の一覧を表示する
