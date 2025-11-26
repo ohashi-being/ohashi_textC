@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 /* 問題8.2
 次の週の指定曜日を求めるメソッドを定義してください。
 
@@ -12,9 +11,8 @@ namespace Practice8_2 {
             while (true) {
                 Console.WriteLine("次の週の日付を知りたい曜日を漢字一字で入力してください（例：月、火、水）:");
                 var wInputDay = Console.ReadLine();
-                var wResult = TryGetNextWeekDay(DateTime.Today, wInputDay);
-                if (wResult.Success) {
-                    Console.WriteLine($"次の週の{wInputDay}曜日は{wResult.NextDate.Month}月{wResult.NextDate.Day}日");
+                if (TryGetNextWeekDay(DateTime.Today, wInputDay, out var wNextDate)) {
+                    Console.WriteLine($"次の週の{wInputDay}曜日は{wNextDate.Month}月{wNextDate.Day}日");
                     break;
                 } else {
                     Console.WriteLine("入力が正しくありません。漢字一字で入力してください。");
@@ -39,11 +37,13 @@ namespace Practice8_2 {
         /// <param name="vBaseDate">基準となる日</param>
         /// <param name="vInput">入力された日本語の曜日表記</param>
         /// <returns>変換可能か、次の週の指定曜日の日付</returns>
-        static (bool Success, DateTime NextDate) TryGetNextWeekDay(DateTime vBaseDate, string vInput) {
-            if (!FJapaneseWeekToDayOfWeek.TryGetValue(vInput, out var wDayOfWeek))
-                return (false, default);
-            var wNextweekDate = vBaseDate.AddDays(wDayOfWeek - vBaseDate.DayOfWeek + 7);
-            return (true, wNextweekDate);
+        static bool TryGetNextWeekDay(DateTime vBaseDate, string vInput, out DateTime vNextDate) {
+            vNextDate = default;
+            if (FJapaneseWeekToDayOfWeek.TryGetValue(vInput, out var wDayOfWeek)) {
+                vNextDate = vBaseDate.AddDays(wDayOfWeek - vBaseDate.DayOfWeek + 7);
+                return true;
+            }
+            return false;
         }
     }
 }
