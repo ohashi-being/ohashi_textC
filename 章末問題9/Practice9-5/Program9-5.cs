@@ -33,6 +33,10 @@ namespace Practice9_5 {
         private static void ShowLargeFile(string vDirectry, long vFileSize) {
             var wFiles = Directory.EnumerateFiles(vDirectry, "*.*", SearchOption.AllDirectories)
                                  .Where(x => GetFileSize(x) >= vFileSize);
+            if (!wFiles.Any()) {
+                Console.WriteLine($"{vFileSize}MB以上のファイルは存在しません。");
+                return;
+            }
             foreach (var wFile in wFiles) Console.WriteLine(wFile);
         }
         /// <summary>
