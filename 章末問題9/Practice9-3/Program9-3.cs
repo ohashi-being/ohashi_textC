@@ -18,6 +18,14 @@ namespace Practice9_3 {
                 Console.WriteLine("エラー: ファイルパスが空です。");
                 return;
             }
+            if (!File.Exists(wSourceFilePath)) {
+                Console.WriteLine($"エラー: 追記元ファイルが存在しません: {wSourceFilePath}");
+                return;
+            }
+            if (!File.Exists(wDestinationFilePath)) {
+                Console.WriteLine($"エラー: 追記先ファイルが存在しません: {wDestinationFilePath}");
+                return;
+            }
             File.AppendAllLines(wDestinationFilePath, File.ReadLines(wSourceFilePath));
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();

@@ -8,8 +8,8 @@ using System.IO;
 namespace Practice9_4 {
     class Program {
         static void Main(string[] args) {
-            var wSourceDir = args[0];
-            var wDestDir = args[1];
+            var wSourceDir = @"..\..\9-4_Source";
+            var wDestDir = @"..\..\9-4_Dest";
             CopyFiles(wSourceDir, wDestDir);
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
@@ -40,7 +40,7 @@ namespace Practice9_4 {
         /// ファイル名に_bakを追加したパスを取得する
         /// </summary>
         /// <param name="vDestDir">コピー先のディレクトリ</param>
-        /// <param name="vFile">元のファイルのパス/param>
+        /// <param name="vFile">元のファイルのパス</param>
         /// <returns>ファイル名に_bakを追加したパス</returns>
         private static string GetBakFilePath(string vDestDir, string vFile) {
             var wFilename = Path.GetFileNameWithoutExtension(vFile) + "_bak";

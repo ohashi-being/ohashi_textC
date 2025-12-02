@@ -23,8 +23,7 @@ namespace Practice9_5 {
         /// <param name="vFileSize">基準となるファイルサイズ</param>
         private static void ShowLargeFile(string vFilePath, long vFileSize) {
             if (!Directory.Exists(vFilePath)) throw new FileNotFoundException($"ディレクトリが存在しません: {vFilePath}");
-            var wFiles = Directory.EnumerateFiles(vFilePath, "*.*", SearchOption.AllDirectories)
-                                 .Where(x => GetFileSize(x) >= vFileSize);
+            var wFiles = Directory.EnumerateFiles(vFilePath, "*.*", SearchOption.AllDirectories).Where(x => GetFileSize(x) >= vFileSize);
             if (!wFiles.Any()) {
                 Console.WriteLine($"{(int)vFileSize/C_MegaByte}MB以上のファイルは存在しません。");
                 return;

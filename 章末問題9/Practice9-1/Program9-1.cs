@@ -18,11 +18,11 @@ using System.Reflection;
 namespace Practice9_1 {
     class Program {
         static void Main(string[] args) {
-            var wFilePath = @"..\..\9-1.cs";
+            var wFilePath = @"..\..\9_CountClass.cs";
             var wTargetString = " class ";
-            ShowCount(wTargetString, CountClassWithStreamReader(wFilePath, wTargetString));
-            ShowCount(wTargetString, CountClassWithReadAllLines(wFilePath, wTargetString));
-            ShowCount(wTargetString, CountClassWithReadLines(wFilePath, wTargetString));
+            Console.WriteLine($"{wTargetString}は{CountClassWithStreamReader(wFilePath, wTargetString)}つあります");
+            Console.WriteLine($"{wTargetString}は{CountClassWithReadAllLines(wFilePath, wTargetString)}つあります");
+            Console.WriteLine($"{wTargetString}は{CountClassWithReadLines(wFilePath, wTargetString)}つあります");
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
@@ -60,11 +60,5 @@ namespace Practice9_1 {
             if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
             return File.ReadLines(vFilePath).Count(x => x.Contains($"{vTargetString}"));
         }
-        /// <summary>
-        /// 対象となる文字列が何回カウントされたかを表示する。
-        /// </summary>
-        /// <param name="vTargetString">検索対象の文字列</param>
-        /// <param name="vCount">対象となる文字列が何回カウントされたか</param>
-        private static void ShowCount(string vTargetString, int vCount) => Console.WriteLine($"{vTargetString}は{vCount}つあります");
     }
 }
