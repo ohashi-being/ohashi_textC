@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 /* 問題10.5
 HTMLファイルを読み込み、<DIV>や<P>などのタグ名が大文字になっているものを小文字のタグに変換してください。
@@ -11,7 +10,7 @@ HTMLファイルを読み込み、<DIV>や<P>などのタグ名が大文字に�
 namespace Practice10_5 {
     internal class Program {
         static void Main(string[] args) {
-            string wFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "sample.html");
+            var wFilePath = @"..\..\sample.html";
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
             var wLines = File.ReadAllLines(wFilePath);
             var wConvertedLines = wLines.Select(x => ConvertTagToLower(x)).ToArray();

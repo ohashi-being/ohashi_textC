@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 /* 問題10.4
 テキストファイルを読み込み、version="v4.0"と書かれた箇所を、version="v5.0"に置き換え、同じファイルに保存してください。
@@ -12,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Practice10_4 {
     internal class Program {
         static void Main(string[] args) {
-            string wFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "sample.txt");
+            var wFilePath = @"..\..\sample.txt";
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
             var wLines = File.ReadAllLines(wFilePath);
             File.WriteAllLines(wFilePath, wLines.Select(x => ReplaceVersionString(x)).ToArray());
