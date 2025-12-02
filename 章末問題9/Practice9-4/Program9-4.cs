@@ -8,11 +8,6 @@ using System.IO;
 namespace Practice9_4 {
     class Program {
         static void Main(string[] args) {
-            if (args.Length <= 1) {
-                Console.WriteLine("エラー：引数が不足しています。");
-                Console.WriteLine("入力方法 : Practice9_4.exe <元となるディレクトリ> <コピーするディレクトリ>");
-                return;
-            }
             var wSourceDir = args[0];
             var wDestDir = args[1];
             CopyFiles(wSourceDir, wDestDir);
@@ -25,7 +20,15 @@ namespace Practice9_4 {
         /// <param name="vSourceDir">元となるディレクトリ</param>
         /// <param name="vDestDir">コピー先のディレクトリ</param>
         private static void CopyFiles(string vSourceDir, string vDestDir) {
-            var wFilePaths = Directory.EnumerateFiles(vSourceDir, "*.*");
+            if (string.IsNullOrEmpty(vSourceDir) || string.IsNullOrEmpty(vDestDir)) {
+                Console.WriteLine("エラー：コピー元またはコピー先のディレクトリが指定されていません。");
+                return;
+            }
+            if (!Directory.Exists(vSourceDir)) {
+                Console.WriteLine($"エラー：コピー元のディレクトリが存在しません。{vSourceDir}");
+                return;
+            }
+                var wFilePaths = Directory.EnumerateFiles(vSourceDir, "*.*");
             if (!Directory.Exists(vDestDir))
                 Directory.CreateDirectory(vDestDir);
             foreach (var wFilePath in wFilePaths) {

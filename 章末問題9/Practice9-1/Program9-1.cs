@@ -18,14 +18,11 @@ using System.Reflection;
 namespace Practice9_1 {
     class Program {
         static void Main(string[] args) {
-            string wExeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string wFilePath = Path.Combine(wExeDir, "Program9-1.cs");
-            if (!File.Exists(wFilePath)) {
-                throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
-            }
-            CountClassWithStreamReader(wFilePath, " class ");
-            CountClassWithReadAllLines(wFilePath, " class ");
-            CountClassWithReadLines(wFilePath, " class ");
+            var wFilePath = @"..\..\9-1.cs";
+            var wTargetString = " class ";
+            ShowCount(wTargetString, CountClassWithStreamReader(wFilePath, wTargetString));
+            ShowCount(wTargetString, CountClassWithReadAllLines(wFilePath, wTargetString));
+            ShowCount(wTargetString, CountClassWithReadLines(wFilePath, wTargetString));
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
@@ -33,35 +30,41 @@ namespace Practice9_1 {
         ///StreamReaderクラスを使用し、ファイルを読み込み、指定した文字列が含まれる行数をカウントします。
         /// </summary>
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
-        /// <param name="vString">検索対象の文字列</param>
-        private static void CountClassWithStreamReader(string vFilePath, string vString) {
+        /// <param name="vTargetString">検索対象の文字列</param>
+        private static int CountClassWithStreamReader(string vFilePath, string vTargetString) {
+            if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
             var wStringCount = 0;
             using (var wStreamReader = new StreamReader(vFilePath)) {
                 while (!wStreamReader.EndOfStream) {
                     var wLine = wStreamReader.ReadLine();
-                    if (wLine.Contains($"{vString}"))
-                        wStringCount++;
+                    if (wLine.Contains($"{vTargetString}")) wStringCount++;
                 }
             }
-            Console.WriteLine($"{vString}は{wStringCount}つあります");
+            return wStringCount;
         }
         /// <summary>
         /// File.ReadAllLinesメソッドを使用し、ファイルを読み込み、指定した文字列が含まれる行数をカウントします。
         /// </summary>
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
-        /// <param name="vString">検索対象の文字列</param>
-        private static void CountClassWithReadAllLines(string vFilePath, string vString) {
-            var wStringCount = File.ReadAllLines(vFilePath).Count(x => x.Contains($"{vString}"));
-            Console.WriteLine($"{vString}は{wStringCount}つあります");
+        /// <param name="vTargetString">検索対象の文字列</param>
+        private static int CountClassWithReadAllLines(string vFilePath, string vTargetString) {
+            if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
+            return File.ReadAllLines(vFilePath).Count(x => x.Contains($"{vTargetString}"));
         }
         /// <summary>
         /// File.ReadLinesメソッドを使用し、ファイルを読み込み、指定した文字列が含まれる行数をカウントします。
         /// </summary>
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
-        /// <param name="vString">検索対象の文字列</param>
-        private static void CountClassWithReadLines(string vFilePath, string vString) {
-            var wStringCount = File.ReadLines(vFilePath).Count(x => x.Contains($"{vString}"));
-            Console.WriteLine($"{vString}は{wStringCount}つあります");
+        /// <param name="vTargetString">検索対象の文字列</param>
+        private static int CountClassWithReadLines(string vFilePath, string vTargetString) {
+            if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
+            return File.ReadLines(vFilePath).Count(x => x.Contains($"{vTargetString}"));
         }
+        /// <summary>
+        /// 対象となる文字列が何回カウントされたかを表示する。
+        /// </summary>
+        /// <param name="vTargetString">検索対象の文字列</param>
+        /// <param name="vCount">対象となる文字列が何回カウントされたか</param>
+        private static void ShowCount(string vTargetString, int vCount) => Console.WriteLine($"{vTargetString}は{vCount}つあります");
     }
 }

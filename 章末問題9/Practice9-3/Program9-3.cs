@@ -12,13 +12,13 @@ namespace Practice9_3 {
                 Console.WriteLine("入力方法　: Practice9-3.exe <追記先ファイル> <追記元ファイル>");
                 return;
             }
-            var wBaseFilePath = args[0];
-            var wAppendFilePath = args[1];
+            var wDestinationFilePath = args[0];
+            var wSourceFilePath = args[1];
             if (string.IsNullOrWhiteSpace(args[0]) || string.IsNullOrWhiteSpace(args[1])) {
                 Console.WriteLine("エラー: ファイルパスが空です。");
                 return;
             }
-            File.AppendAllLines(wBaseFilePath, File.ReadLines(wAppendFilePath));
+            File.AppendAllLines(wDestinationFilePath, File.ReadLines(wSourceFilePath));
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
