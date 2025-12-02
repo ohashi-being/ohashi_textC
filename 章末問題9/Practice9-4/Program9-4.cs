@@ -28,9 +28,8 @@ namespace Practice9_4 {
                 Console.WriteLine($"エラー：コピー元のディレクトリが存在しません。{vSourceDir}");
                 return;
             }
-                var wFilePaths = Directory.EnumerateFiles(vSourceDir, "*.*");
-            if (!Directory.Exists(vDestDir))
-                Directory.CreateDirectory(vDestDir);
+            var wFilePaths = Directory.EnumerateFiles(vSourceDir, "*.*");
+            if (!Directory.Exists(vDestDir)) Directory.CreateDirectory(vDestDir);
             foreach (var wFilePath in wFilePaths) {
                 var wDestPath = GetBakFilePath(vDestDir, wFilePath);
                 Console.WriteLine(wDestPath);
