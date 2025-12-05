@@ -7,10 +7,11 @@ using System.Text.RegularExpressions;
 namespace Practice10_2 {
     internal class Program {
         static void Main(string[] args) {
-            var wFilePath =  @"..\..\sample.txt";
+            var wFilePath = @"..\..\sample.txt";
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
+            var wPattern = @"\b\d{3,}\b";
             foreach (var wLine in File.ReadAllLines(wFilePath)) {
-                var wMatches = Regex.Matches(wLine, @"\b\d{3,}\b");
+                var wMatches = Regex.Matches(wLine, wPattern);
                 foreach (Match wMatch in wMatches) Console.WriteLine(wMatch.Value);
             }
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");

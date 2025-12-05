@@ -10,8 +10,9 @@ namespace Practice10_1 {
     internal class Program {
         static void Main(string[] args) {
             string[] wPhoneNumbers = { "090-1234-5678", "080-1234-5678", "070-1234-5678", "050-1234-5678", "09012345678" };
+            var wPattern = @"^(0[789]0)-\d{4}-\d{4}$";
             foreach (var wPhoneNumber in wPhoneNumbers) {
-                if (IsMobilePhoneNumber(wPhoneNumber)) Console.WriteLine($"{wPhoneNumber}は携帯電話番号です");
+                if (IsMobilePhoneNumber(wPhoneNumber, wPattern)) Console.WriteLine($"{wPhoneNumber}は携帯電話番号です");
                 else Console.WriteLine($"{wPhoneNumber,13}は携帯電話番号ではありません");
             }
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
@@ -21,7 +22,8 @@ namespace Practice10_1 {
         /// 携帯電話の電話番号かどうかを判定する
         /// </summary>
         /// <param name="vPhoneNumber">電話番号</param>
+        /// <param name="vPattern">検索パターン</param>
         /// <returns>携帯電話の電話番号かどうか</returns>
-        static bool IsMobilePhoneNumber(string vPhoneNumber) => Regex.IsMatch(vPhoneNumber, @"^(0[789]0)-\d{4}-\d{4}$");
+        static bool IsMobilePhoneNumber(string vPhoneNumber, string vPattern) => Regex.IsMatch(vPhoneNumber, vPattern);
     }
 }

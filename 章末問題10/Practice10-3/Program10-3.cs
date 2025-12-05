@@ -29,11 +29,8 @@ namespace Practice10_3 {
         /// <param name="vText">検索するテキスト</param>
         /// <param name="vContainsString">含んでいる文字</param>
         static void ShowMatchIndexes(string vText, string vContainsString) {
-            var wMatches = Regex.Matches(vText, $@"{vContainsString}", RegexOptions.IgnoreCase);
-            if (wMatches.Count == 1) {
-                Console.WriteLine($"{vText}には{vContainsString}が含まれています。");
-                foreach (Match wMatch in wMatches) Console.WriteLine($"開始位置: {wMatch.Index}");
-            } else if (wMatches.Count == 0) {
+            var wMatches = Regex.Matches(vText, Regex.Escape(vContainsString), RegexOptions.IgnoreCase);
+            if (wMatches.Count == 0) {
                 Console.WriteLine($"{vText}には{vContainsString}は含まれていません。");
             } else {
                 Console.WriteLine($"{vText}には{vContainsString}が含まれています。");

@@ -14,7 +14,9 @@ namespace Practice10_4 {
             var wFilePath = @"..\..\sample.txt";
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
             var wLines = File.ReadAllLines(wFilePath);
-            File.WriteAllLines(wFilePath, wLines.Select(x => ReplaceVersionString(x)).ToArray());
+            var wPattern = @"\b(version)\s*=\s*""v4\.0""";
+            var wReplacedPattern = @"version=""v5.0""";
+            File.WriteAllLines(wFilePath, wLines.Select(x => ReplaceVersionString(x,wPattern,wReplacedPattern)));
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
@@ -22,9 +24,11 @@ namespace Practice10_4 {
         /// 文字列内のversion="v4.0"をversion="v5.0"に置き換える
         /// </summary>
         /// <param name="vLine">処理対象の文字列</param>
+        /// <param name="vPattern">検索パターン</param>
+        /// <param name="vReplacedPattern">返還後のパターン</param>
         /// <returns>置換後の文字列</returns>
-        static string ReplaceVersionString(string vLine) {
-            var wReplaced = Regex.Replace(vLine, @"\b(version)\s*=\s*""v4\.0""", @"version=""v5.0""", RegexOptions.IgnoreCase);
+        static string ReplaceVersionString(string vLine, string vPattern, string vReplacedPattern) {
+            var wReplaced = Regex.Replace(vLine, vPattern, vReplacedPattern, RegexOptions.IgnoreCase);
             if (vLine != wReplaced) {
                 Console.WriteLine($"変換:{vLine} → {wReplaced}");
             } else {
