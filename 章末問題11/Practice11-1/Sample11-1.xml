@@ -12,7 +12,7 @@
     </ballsport>
     <ballsport>
         <name kanji="野球">ベースボール</name>
-        <teammembers>9</teammembers>
+        <teammembers>o</teammembers>
         <firstplayed>1846</firstplayed>
     </ballsport>
 </ballSports>

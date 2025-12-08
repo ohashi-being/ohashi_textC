@@ -23,10 +23,10 @@ namespace Practice11_2 {
                 Console.WriteLine("XMLファイルの形式が正しくありません。");
                 return;
             }
-            var wXDocment = XDocument.Load(wFilePath);
-            var wWord = wXDocment.Root.Elements();
-            var wKanjiToYomi = wWord.ToDictionary(x => x.Element("kanji").Value, x => x.Element("yomi").Value);
-            var wWordElements = wKanjiToYomi.Select(x => new XElement("word", new XAttribute("kanji", x.Key), new XAttribute("yomi", x.Value)));
+            var wWord = wXDocument.Root.Elements();
+            var wWordElements = wWord.Select(x => new XElement("word",
+                new XAttribute("kanji", x.Element("kanji").Value),
+                new XAttribute("yomi", x.Element("yomi").Value)));
             var wRoot = new XElement("difficultkanji", wWordElements);
             wRoot.Save(@"..\..\Sample11-2.ver2.xml");
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
