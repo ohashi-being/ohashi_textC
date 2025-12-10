@@ -28,24 +28,25 @@ namespace Practice9_4 {
                 Console.WriteLine($"エラー：コピー元のディレクトリが存在しません。{vSourceDir}");
                 return;
             }
-            var wFilePaths = Directory.EnumerateFiles(vSourceDir, "*.*");
             if (!Directory.Exists(vDestDir)) Directory.CreateDirectory(vDestDir);
-            foreach (var wFilePath in wFilePaths) {
+            Console.WriteLine("処理成功！！");
+            Console.WriteLine();
+            Console.WriteLine($"コピー元ディレクトリ: {vSourceDir}");
+            Console.WriteLine($"コピー先ディレクトリ: {vDestDir}");
+            Console.WriteLine();
+            Console.WriteLine("コピー内容");
+            foreach (var wFilePath in Directory.EnumerateFiles(vSourceDir, "*")) {
                 var wDestPath = GetBakFilePath(vDestDir, wFilePath);
-                Console.WriteLine(wDestPath);
                 File.Copy(wFilePath, wDestPath, overwrite: true);
-            }
+                Console.WriteLine(Path.GetFileName(wDestPath));
+            } 
         }
         /// <summary>
         /// ファイル名に_bakを追加したパスを取得する
         /// </summary>
         /// <param name="vDestDir">コピー先のディレクトリ</param>
-        /// <param name="vFile">元のファイルのパス</param>
+        /// <param name="vFilePath">元のファイルのパス</param>
         /// <returns>ファイル名に_bakを追加したパス</returns>
-        private static string GetBakFilePath(string vDestDir, string vFile) {
-            var wFilename = Path.GetFileNameWithoutExtension(vFile) + "_bak";
-            var wExtension = Path.GetExtension(vFile);
-            return Path.Combine(vDestDir, wFilename + wExtension);
-        }
+        private static string GetBakFilePath(string vDestDir, string vFilePath) => Path.Combine(vDestDir, $"{Path.GetFileNameWithoutExtension(vFilePath)}_bak{Path.GetExtension(vFilePath)}");
     }
 }
