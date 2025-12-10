@@ -11,7 +11,7 @@ namespace Practice9_5 {
         private const long C_MegaByte = 1024 * 1024;
         static void Main(string[] args) {
             var wDirectoryPath = @"..\..\9-5";
-            ShowLargeFile(wDirectoryPath, 1234567891 * C_MegaByte);
+            ShowLargeFile(wDirectoryPath, 1 * C_MegaByte);
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
