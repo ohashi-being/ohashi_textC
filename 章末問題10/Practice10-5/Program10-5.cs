@@ -14,10 +14,11 @@ namespace Practice10_5 {
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
             var wLines = File.ReadAllLines(wFilePath);
             var wPattern = @"<\s*(/?)([A-Za-z]*[A-Z][A-Za-z0-9]*)(\s[^<>]*)?>";
-            var wConvertedLines = wLines.Select(x => ConvertTagToLower(x, wPattern));
+            var wConvertedLines = wLines.Select(x => ConvertTagToLower(x, wPattern)).ToList();
             File.WriteAllLines(wFilePath, wConvertedLines);
-            foreach (var wLine in wConvertedLines)
+            foreach (var wLine in wConvertedLines) {
                 Console.WriteLine(wLine);
+            }
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }

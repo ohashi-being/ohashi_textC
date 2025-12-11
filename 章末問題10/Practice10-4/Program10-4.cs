@@ -14,7 +14,7 @@ namespace Practice10_4 {
             var wFilePath = @"..\..\sample.txt";
             if (!File.Exists(wFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {wFilePath}");
             var wLines = File.ReadAllLines(wFilePath);
-            var wPattern = @"\b(version)\s*=\s*""v4\.0""";
+            var wPattern = @"\bversion\s*=\s*""v4\.0""";
             var wReplacedPattern = @"version=""v5.0""";
             File.WriteAllLines(wFilePath, wLines.Select(x => ReplaceVersionString(x,wPattern,wReplacedPattern)));
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");

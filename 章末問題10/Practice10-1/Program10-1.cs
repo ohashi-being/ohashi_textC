@@ -8,12 +8,16 @@ using System.Text.RegularExpressions;
 
 namespace Practice10_1 {
     internal class Program {
+        /// <summary>
+        /// 携帯電話番号の長さ（-含む）
+        /// </summary>
+        private const int C_MobilePhoneNumberLength = 13;
         static void Main(string[] args) {
             string[] wPhoneNumbers = { "090-1234-5678", "080-1234-5678", "070-1234-5678", "050-1234-5678", "09012345678" };
-            var wPattern = @"^(0[789]0)-\d{4}-\d{4}$";
+            var wPattern = @"^0[789]0-\d{4}-\d{4}$";
             foreach (var wPhoneNumber in wPhoneNumbers) {
                 if (IsMobilePhoneNumber(wPhoneNumber, wPattern)) Console.WriteLine($"{wPhoneNumber}は携帯電話番号です");
-                else Console.WriteLine($"{wPhoneNumber,13}は携帯電話番号ではありません");
+                else Console.WriteLine($"{wPhoneNumber,C_MobilePhoneNumberLength}は携帯電話番号ではありません");
             }
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
