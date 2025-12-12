@@ -23,12 +23,16 @@ namespace Practice11_2 {
                 Console.WriteLine("XMLファイルの形式が正しくありません。");
                 return;
             }
-            var wWord = wXDocument.Root.Elements();
-            var wWordElements = wWord.Select(x => new XElement("word",
+            Console.Write("保存先ファイルのパス（ファイル名のみの場合は現在のディレクトリに保存）を入力してください");
+            var wSaveFilePath = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(wSaveFilePath))
+                wSaveFilePath = "Sample11-2.ver2.xml";
+            var wWordElements = wXDocument.Root.Elements().Select(x => new XElement("word",
                 new XAttribute("kanji", x.Element("kanji").Value),
                 new XAttribute("yomi", x.Element("yomi").Value)));
             var wRoot = new XElement("difficultkanji", wWordElements);
-            wRoot.Save(@"..\..\Sample11-2.ver2.xml");
+            wRoot.Save(wSaveFilePath);
+            Console.WriteLine($"XMLファイルを保存しました: {Path.GetFullPath(wSaveFilePath)}");
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
