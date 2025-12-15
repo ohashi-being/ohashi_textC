@@ -19,11 +19,11 @@ namespace Practice9_3 {
             var wSourceFilePath = args[0];
             var wDestinationFilePath = args[1];
             if (!File.Exists(wSourceFilePath)) {
-                Console.WriteLine($"エラー: 追記元ファイルが存在しません: {wSourceFilePath}");
+                Console.WriteLine($"エラー: 元となるファイルが存在しません: {wSourceFilePath}");
                 return;
             }
             if (!File.Exists(wDestinationFilePath)) {
-                Console.WriteLine($"エラー: 追記先ファイルが存在しません: {wDestinationFilePath}");
+                Console.WriteLine($"エラー: 追加先のファイルが存在しません: {wDestinationFilePath}");
                 return;
             }
             File.AppendAllLines(wDestinationFilePath, File.ReadLines(wSourceFilePath));

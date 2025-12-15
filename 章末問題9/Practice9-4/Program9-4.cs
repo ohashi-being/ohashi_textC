@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 /* 問題9.4
 指定したディレクトリ直下にあるファイルを別のディレクトリにコピーするプログラムを作成してください。
 その際、コピーするファイル名は、拡張子を含まないファイル名の後ろに、_bakを追加してください。
@@ -29,16 +30,19 @@ namespace Practice9_4 {
                 return;
             }
             if (!Directory.Exists(vDestDir)) Directory.CreateDirectory(vDestDir);
+            var wSorceFile = Directory.EnumerateFiles(vSourceDir, "*").ToList();
             Console.WriteLine("処理成功！！");
             Console.WriteLine();
             Console.WriteLine($"コピー元ディレクトリ: {vSourceDir}");
             Console.WriteLine($"コピー先ディレクトリ: {vDestDir}");
             Console.WriteLine();
-            Console.WriteLine("コピー内容");
-            foreach (var wFilePath in Directory.EnumerateFiles(vSourceDir, "*")) {
+            foreach (var wFilePath in wSorceFile) {
+                Console.WriteLine($"コピー元のファイル{Path.GetFileName(wFilePath)}");
+                Console.WriteLine("↓");
                 var wDestPath = GetBakFilePath(vDestDir, wFilePath);
                 File.Copy(wFilePath, wDestPath, overwrite: true);
-                Console.WriteLine(Path.GetFileName(wDestPath));
+                Console.WriteLine($"コピー先のファイル{Path.GetFileName(wDestPath)}");
+                Console.WriteLine();
             } 
         }
         /// <summary>

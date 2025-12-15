@@ -33,8 +33,7 @@ namespace Practice9_1 {
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
         /// <param name="vTargetString">検索対象の文字列</param>
         private static int CountClassWithStreamReader(string vFilePath, string vTargetString) {
-            IsFileExist(vFilePath);
-            IsCsFile(vFilePath);
+            ValidateFilePath(vFilePath, ".cs");
             var wStringCount = 0;
             using (var wStreamReader = new StreamReader(vFilePath)) {
                 while (!wStreamReader.EndOfStream) {
@@ -50,8 +49,7 @@ namespace Practice9_1 {
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
         /// <param name="vTargetString">検索対象の文字列</param>
         private static int CountClassWithReadAllLines(string vFilePath, string vTargetString) {
-            IsFileExist(vFilePath);
-            IsCsFile(vFilePath);
+            ValidateFilePath(vFilePath, ".cs");
             return File.ReadAllLines(vFilePath).Count(x => x.Contains(vTargetString));
         }
         /// <summary>
@@ -60,8 +58,7 @@ namespace Practice9_1 {
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
         /// <param name="vTargetString">検索対象の文字列</param>
         private static int CountClassWithReadLines(string vFilePath, string vTargetString) {
-            IsFileExist(vFilePath);
-            IsCsFile(vFilePath);
+            ValidateFilePath(vFilePath, ".cs");
 
             return File.ReadLines(vFilePath).Count(x => x.Contains(vTargetString));
         }
@@ -72,26 +69,18 @@ namespace Practice9_1 {
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
         /// <returns>classキーワードが含まれる行数</returns>
         private static int CountClassWithRegex(string vFilePath) {
-            IsFileExist(vFilePath);
-            IsCsFile(vFilePath);
-            var wPattern = @"\s+class\s+";
-            return File.ReadLines(vFilePath).Count(x => new Regex(wPattern).IsMatch(x));
+            ValidateFilePath(vFilePath, ".cs");
+            const string C_Pattern = @"\s+class\s+";
+            return File.ReadLines(vFilePath).Count(x => Regex.IsMatch(x, C_Pattern));
         }
         /// <summary>
-        /// ファイルが存在するかを確認する。
+        /// ファイルパスの妥当性を検証する。
         /// </summary>
         /// <param name="vFilePath">読み込み対象のファイルパス</param>
-        /// <exception cref="FileNotFoundException">ファイルが存在しない場合</exception>
-        private static void IsFileExist(string vFilePath) {
+        /// <param name="vExpectedExtension">期待する拡張子（例：".cs"）</param>
+        private static void ValidateFilePath(string vFilePath, string vExpectedExtension) {
             if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
-        }
-        /// <summary>
-        /// csファイルかを確認する。
-        /// </summary>
-        /// <param name="vFilePath">読み込み対象のファイルパス</param>
-        /// <exception cref="ArgumentException">ファイルの拡張子が".cs"でない場合</exception>
-        private static void IsCsFile(string vFilePath) {
-            if (Path.GetExtension(vFilePath) != ".cs") throw new ArgumentException("C#のソースファイルではありません。");
+            if (Path.GetExtension(vFilePath) != vExpectedExtension) throw new ArgumentException($"{vExpectedExtension}ファイルではありません。");
         }
     }
 }
