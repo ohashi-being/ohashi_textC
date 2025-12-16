@@ -14,6 +14,7 @@ Sample11-2.xmlファイルを以下の形式に変換し、別のXMLファイル
 namespace Practice11_2 {
     class Program {
         static void Main(string[] args) {
+            Console.WriteLine(Path.GetFullPath("aaa"));
             var wFilePath = @"..\..\Sample11-2.xml";
             if (!File.Exists(wFilePath)) {
                 Console.WriteLine("XMLファイルが存在しません。");
