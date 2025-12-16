@@ -14,20 +14,18 @@ Sample11-2.xmlファイルを以下の形式に変換し、別のXMLファイル
 namespace Practice11_2 {
     class Program {
         static void Main(string[] args) {
-            Console.WriteLine(Path.GetFullPath("aaa"));
             var wFilePath = @"..\..\Sample11-2.xml";
-            if (!File.Exists(wFilePath)) {
+            XDocument wXDocument;
+            try {
+                wXDocument = XDocument.Load(wFilePath);
+            } catch (FileNotFoundException) {
                 Console.WriteLine("XMLファイルが存在しません。");
                 return;
-            }
-            if (!TryLoadXmlDocument(wFilePath, out var wXDocument)) {
+            } catch (Exception) {
                 Console.WriteLine("XMLファイルの形式が正しくありません。");
                 return;
             }
-            Console.Write("保存先ファイルのパス（ファイル名のみの場合は現在のディレクトリに保存）を入力してください");
-            var wSaveFilePath = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(wSaveFilePath))
-                wSaveFilePath = "Sample11-2.ver2.xml";
+            var wSaveFilePath = GetOutputPath("Sample11-2.ver2.xml");
             var wWordElements = wXDocument.Root.Elements().Select(x => new XElement("word",
                 new XAttribute("kanji", x.Element("kanji").Value),
                 new XAttribute("yomi", x.Element("yomi").Value)));
@@ -37,19 +35,24 @@ namespace Practice11_2 {
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
-        /// <summary>
-        /// XMLファイルの読み込みを試行し、成功した場合はXDocumentを返す
-        /// </summary>
-        /// <param name="vFilePath">ファイルパス</param>
-        /// <param name="vXDocument">読み込み成功時のXDocument</param>
-        /// <returns>読み込みできるかどうか</returns>
-        static bool TryLoadXmlDocument(string vFilePath, out XDocument vXDocument) {
-            try {
-                vXDocument = XDocument.Load(vFilePath);
-                return true;
-            } catch (System.Xml.XmlException) {
-                vXDocument = null;
-                return false;
+
+        static string GetOutputPath(string vDefaultFile) {
+            while (true) {
+                Console.WriteLine("保存先ファイルのパスを入力してください: ");
+                var wOutputPath = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(wOutputPath)) {
+                    wOutputPath = vDefaultFile;
+                    Console.WriteLine("現在のディレクトリに保存します");
+                }
+                if (wOutputPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0) {
+                    Console.WriteLine("パスに使用できない文字が含まれています。再入力してください。");
+                    continue;
+                }
+                if (Path.GetFileName(wOutputPath).IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) {
+                    Console.WriteLine("ファイル名に使用できない文字が含まれています。再入力してください。");
+                    continue;
+                }
+                return wOutputPath;
             }
         }
     }
