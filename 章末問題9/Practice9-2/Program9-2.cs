@@ -47,8 +47,8 @@ namespace Practice9_2 {
                 return GetDefaultOutputPath(vSourceFilePath);
             }
             if (!Path.IsPathRooted(vUserInputFilePath)) {
-                var sourceDirectory = Path.GetDirectoryName(Path.GetFullPath(vSourceFilePath));
-                return Path.GetFullPath(Path.Combine(sourceDirectory, vUserInputFilePath));
+                var wSourceDirectory = Path.GetDirectoryName(Path.GetFullPath(vSourceFilePath));
+                return Path.GetFullPath(Path.Combine(wSourceDirectory, vUserInputFilePath));
             }
             var wOutputFilePath = Path.GetFullPath(vUserInputFilePath);
             var wOutputDirectory = Path.GetDirectoryName(wOutputFilePath);
