@@ -29,8 +29,8 @@ namespace Practice12_2 {
             Novelist wNoveList;
             using (var wReader = XmlReader.Create(@"..\..\Sample12-2.xml")) {
                 var wSerializer = new XmlSerializer(typeof(Novelist));
-                wNoveList = (Novelist)wSerializer.Deserialize(wReader);
-                Console.WriteLine($"Name: {wNoveList.Name}, Birth: {wNoveList.Birth}, Title: {string.Join(",",wNoveList.Masterpieces)}");
+                wNoveList = wSerializer.Deserialize(wReader) as Novelist;
+                Console.WriteLine(wNoveList);
             }
             var wSettings = new DataContractJsonSerializerSettings {
                 UseSimpleDictionaryFormat = true,

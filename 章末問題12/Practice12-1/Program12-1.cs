@@ -22,48 +22,57 @@ using System.Xml.Serialization;
 namespace Practice12_1 {
     class Program {
         static void Main(string[] args) {
-            var wEmployee = new Employee {
-                Id = 2947,
-                Name = "相沢 悠真",
-                HireDate = new DateTime(2022, 7, 21)
-            };
+            var wEmployee = new Employee(2947, "相沢 悠真", new DateTime(2022, 7, 21));
             // 解答1
             Console.WriteLine("-------------解答1-------------");
             using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-1.xml")) {
                 var wSerializer = new XmlSerializer(wEmployee.GetType());
                 wSerializer.Serialize(wWriter, wEmployee);
+                Console.WriteLine("XMLファイルにシリアル化が完了しました。\n");
             }
             using (var wReader = XmlReader.Create(@"..\..\Sample12-1-1.xml")) {
                 var wSerializer = new XmlSerializer(typeof(Employee));
-                var wLoadedEmployee = (Employee)wSerializer.Deserialize(wReader);
-                Console.WriteLine($"Id: {wLoadedEmployee.Id}, Name: {wLoadedEmployee.Name}, HireDate: {wLoadedEmployee.HireDate}");
+                var wLoadedEmployee = wSerializer.Deserialize(wReader) as Employee;
+                if (wLoadedEmployee == null) {
+                    Console.WriteLine("\n逆シリアル化に失敗しました。\n");
+                    return;
+                }
+                Console.WriteLine($"{wLoadedEmployee}\n\nXMLファイルからの逆シリアル化が完了しました。\n");
             }
-            Console.WriteLine();
             // 解答2
             Console.WriteLine("-------------解答2-------------");
             var wEmployees = new Employee[] {
                 wEmployee,
-                new Employee { Id = 2947, Name = "藤原 陽翔", HireDate = new DateTime(2022, 7, 21) },
-                new Employee { Id = 3021, Name = "宮崎 陽菜", HireDate = new DateTime(2021, 4, 15) },
-                new Employee { Id = 3150, Name = "三好 海斗", HireDate = new DateTime(2020, 11, 30) }
+                new Employee(2947, "藤原 陽翔", new DateTime(2022, 7, 21)),
+                new Employee(3021, "宮崎 陽菜", new DateTime(2021, 4, 15)),
+                new Employee(3150, "三好 海斗", new DateTime(2020, 11, 30))
             };
             using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-2.xml")) {
                 var wSerializer = new DataContractSerializer(wEmployees.GetType());
                 wSerializer.WriteObject(wWriter, wEmployees);
+                Console.WriteLine("XMLファイルにシリアル化が完了しました。\n");
             }
             // 解答3
+            Console.WriteLine("-------------解答3-------------");
             using (var wReader = XmlReader.Create(@"..\..\Sample12-1-2.xml")) {
                 var wSerializer = new DataContractSerializer(typeof(Employee[]));
-                var wLoadedEmployees = (Employee[])wSerializer.ReadObject(wReader);
-                foreach (var wLoadedEmployee in wLoadedEmployees) {
-                    Console.WriteLine($"Id: {wLoadedEmployee.Id}, Name: {wLoadedEmployee.Name}, HireDate: {wLoadedEmployee.HireDate}");
+                var wLoadedEmployees = wSerializer.ReadObject(wReader) as Employee[];
+                if (wLoadedEmployees == null) {
+                    Console.WriteLine("\n逆シリアル化に失敗しました。\n");
+                    return;
                 }
+                foreach (var wLoadedEmployee in wLoadedEmployees) {
+                    Console.WriteLine(wLoadedEmployee.ToString());
+                }
+                Console.WriteLine("\nXMLファイルからの逆シリアル化が完了しました。\n");
             }
             // 解答4
+            Console.WriteLine("-------------解答4-------------");
             var wEmployeesForJson = wEmployees.Select(x => new EmployeeForJson(x)).ToArray();
             using (var wStream = new FileStream(@"..\..\Sample12-1-4.json", FileMode.Create, FileAccess.Write)) {
                 var wSerializer = new DataContractJsonSerializer(wEmployeesForJson.GetType());
                 wSerializer.WriteObject(wStream, wEmployeesForJson);
+                Console.WriteLine("\nJSONファイルにシリアル化が完了しました。");
             }
         }
     }
