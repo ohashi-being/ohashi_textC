@@ -35,7 +35,6 @@ namespace Practice11_2 {
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
-
         static string GetOutputPath(string vDefaultFile) {
             while (true) {
                 Console.WriteLine("保存先ファイルのパスを入力してください: ");

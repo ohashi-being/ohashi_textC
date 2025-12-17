@@ -39,14 +39,10 @@ namespace Practice11_1 {
             }
             Console.WriteLine("-----------解答1-----------");
             foreach (var wBallSport in wBallSports) {
-                var wSportName = wBallSport.Element("name")?.Value ?? "不明な競技";
-                string wTeamMemberString = wBallSport.Element("teammembers")?.Value ?? "不明";
-                if (int.TryParse(wTeamMemberString, out int wTeamMember)) {
-                    Console.WriteLine($"競技名: {wSportName},チームメンバー数: {wTeamMember}");
-                } else {
-                    Console.WriteLine($"[エラー]競技名: {wSportName}のチームメンバー数が整数ではありません: {wTeamMemberString}");
-                    Console.WriteLine($"競技名: {wSportName}, チームメンバー数: {wTeamMemberString}");
-                }
+                var wSportNameValue = wBallSport.Element("name")?.Value;
+                var wSportName = !string.IsNullOrWhiteSpace(wSportNameValue) ? wSportNameValue : "不明な競技";
+                var wTeamMemberString = int.TryParse(wBallSport.Element("teammembers")?.Value, out var wTeamMember) ? wTeamMember.ToString() : "不明";
+                Console.WriteLine($"競技名：{wSportName},メンバー数:{wTeamMemberString}");
             }
             // 解答2
             Console.WriteLine("-----------解答2-----------");
