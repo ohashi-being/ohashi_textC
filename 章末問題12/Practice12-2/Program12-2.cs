@@ -27,19 +27,55 @@ namespace Practice12_2 {
     internal class Program {
         static void Main(string[] args) {
             Novelist wNoveList;
-            using (var wReader = XmlReader.Create(@"..\..\Sample12-2.xml")) {
-                var wSerializer = new XmlSerializer(typeof(Novelist));
-                wNoveList = wSerializer.Deserialize(wReader) as Novelist;
-                Console.WriteLine(wNoveList);
+            try {
+                // XMLファイル読み込み前のバリデーション
+                ValidateFilePath(@"..\..\Sample12-2.xml", ".xml");
+                using (var wReader = XmlReader.Create(@"..\..\Sample12-2.xml")) {
+                    var wSerializer = new XmlSerializer(typeof(Novelist));
+                    wNoveList = wSerializer.Deserialize(wReader) as Novelist;
+                    Console.WriteLine(wNoveList);
+                    Console.WriteLine("XMLファイルからの逆シリアル化が完了しました。\n");
+                }
+
+                // JSONファイル書き込み前のバリデーション
+                ValidateFilePathForWrite(@"..\..\Sample12-2.json", ".json");
+                var wSettings = new DataContractJsonSerializerSettings {
+                    UseSimpleDictionaryFormat = true,
+                    DateTimeFormat = new System.Runtime.Serialization.DateTimeFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
+                };
+                using (var wStream = new FileStream(@"..\..\Sample12-2.json", FileMode.Create, FileAccess.Write)) {
+                    var wSerializer = new DataContractJsonSerializer(wNoveList.GetType(), wSettings);
+                    wSerializer.WriteObject(wStream, wNoveList);
+                    Console.WriteLine("JSONファイルにシリアル化が完了しました。");
+                }
+            } catch (FileNotFoundException ex) {
+                Console.WriteLine($"ファイルエラー: {ex.Message}");
+            } catch (DirectoryNotFoundException ex) {
+                Console.WriteLine($"ディレクトリエラー: {ex.Message}");
+            } catch (ArgumentException ex) {
+                Console.WriteLine($"拡張子エラー: {ex.Message}");
+            } catch (Exception ex) {
+                Console.WriteLine($"エラー: {ex.Message}");
             }
-            var wSettings = new DataContractJsonSerializerSettings {
-                UseSimpleDictionaryFormat = true,
-                DateTimeFormat = new System.Runtime.Serialization.DateTimeFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
-            };
-            using (var wStream = new FileStream(@"..\..\Sample12-2.json", FileMode.Create, FileAccess.Write)) {
-                var wSerializer = new DataContractJsonSerializer(wNoveList.GetType(), wSettings);
-                wSerializer.WriteObject(wStream, wNoveList);
-            }
+        }
+        /// <summary>
+        /// 読み込み用ファイルパスの妥当性を検証する。
+        /// </summary>
+        /// <param name="vFilePath">読み込み対象のファイルパス</param>
+        /// <param name="vExpectedExtension">期待する拡張子（例：".xml"）</param>
+        private static void ValidateFilePath(string vFilePath, string vExpectedExtension) {
+            if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
+            if (Path.GetExtension(vFilePath) != vExpectedExtension) throw new ArgumentException($"{vExpectedExtension}ファイルではありません。");
+        }
+        /// <summary>
+        /// 書き込み用ファイルパスの妥当性を検証する。
+        /// </summary>
+        /// <param name="vFilePath">書き込み対象のファイルパス</param>
+        /// <param name="vExpectedExtension">期待する拡張子（例：".json"）</param>
+        private static void ValidateFilePathForWrite(string vFilePath, string vExpectedExtension) {
+            var wDirectory = Path.GetDirectoryName(Path.GetFullPath(vFilePath));
+            if (!Directory.Exists(wDirectory)) throw new DirectoryNotFoundException($"ディレクトリが存在しません: {wDirectory}");
+            if (Path.GetExtension(vFilePath) != vExpectedExtension) throw new ArgumentException($"{vExpectedExtension}ファイルではありません。");
         }
     }
 }
