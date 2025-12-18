@@ -21,47 +21,33 @@ namespace Practice10_3 {
                 "It will take time.",
                 "We reorganized the timetable.",
             };
-            var wPattern = @"\btime\b";
             foreach (var wText in wTexts) {
-                ShowMatchIndexes(wText, @"time");
-
+                ShowMatchIndexes(wText, "time", false);
             }
             Console.WriteLine();
             foreach (var wText in wTexts) {
-                ShowMatchIndexesByPattern(wText, wPattern);
-
+                ShowMatchIndexes(wText, "time", true);
             }
             Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
             Console.ReadKey();
         }
         /// <summary>
-        ///  テキストから指定された文字列が含まれる位置をすべて表示する
+        /// テキストから指定された文字列が含まれる位置をすべて表示する
         /// </summary>
         /// <param name="vText">検索するテキスト</param>
-        /// <param name="vContainsString">含んでいる文字</param>
-        static void ShowMatchIndexes(string vText, string vContainsString) {
-            var wMatches = Regex.Matches(vText, Regex.Escape(vContainsString), RegexOptions.IgnoreCase);
+        /// <param name="vSearchString">検索文字列または正規表現パターン</param>
+        /// <param name="vIsRegex">正規表現として扱うかどうか</param>
+        static void ShowMatchIndexes(string vText, string vSearchString, bool vIsRegex) {
+            string wRegexPattern = Regex.Escape(vSearchString);
+            if (vIsRegex) {
+                wRegexPattern = $@"\b{wRegexPattern}\b";
+            }
+            var wMatches = Regex.Matches(vText, wRegexPattern, RegexOptions.IgnoreCase);
             if (wMatches.Count == 0) {
-                Console.WriteLine($"{vText}には{vContainsString}は含まれていません。");
+                Console.WriteLine($"{vText}には{vSearchString}は含まれていません。");
                 return;
             }
-            Console.WriteLine($"{vText}には{vContainsString}が含まれています。");
-            foreach (Match wMatch in wMatches) {
-                Console.WriteLine($"開始位置: {wMatch.Index}");
-            }
-        }
-        /// <summary>
-        /// テキストから指定された文字列が一致する位置をすべて表示する
-        /// </summary>
-        /// <param name="vText">検索するテキスト</param>
-        /// <param name="vPattern">指定する文字列</param>
-        static void ShowMatchIndexesByPattern(string vText, string vPattern) {
-            var wMatches = Regex.Matches(vText, vPattern, RegexOptions.IgnoreCase);
-            if (wMatches.Count == 0) {
-                Console.WriteLine($"{vText}には{vPattern.Replace(@"\b", "")}は含まれていません。");
-                return;
-            }
-            Console.WriteLine($"{vText}には{vPattern.Replace(@"\b", "")}が含まれています。");
+            Console.WriteLine($"{vText}には{vSearchString}が含まれています。");
             foreach (Match wMatch in wMatches) {
                 Console.WriteLine($"開始位置: {wMatch.Index}");
             }
