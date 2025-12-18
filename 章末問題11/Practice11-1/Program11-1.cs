@@ -21,15 +21,26 @@ namespace Practice11_1 {
         static void Main(string[] args) {
             // 解答1
             var wFilePath = @"..\..\Sample11-1.xml";
-            if (!File.Exists(wFilePath)) {
-                Console.WriteLine("XMLファイルが存在しません。");
-                return;
-            }
             XDocument wXDocument;
             try {
                 wXDocument = XDocument.Load(wFilePath);
-            } catch (Exception) {
-                Console.WriteLine("XMLファイルの形式が正しくありません。");
+            } catch (UnauthorizedAccessException) {
+                Console.WriteLine("ファイルにアクセスする権限がありません。");
+                return;
+            } catch (DirectoryNotFoundException) {
+                Console.WriteLine("指定されたディレクトリが見つかりません。");
+                return;
+            } catch (FileNotFoundException) {
+                Console.WriteLine("XMLファイルが見つかりません。");
+                return;
+            } catch (IOException ex) {
+                Console.WriteLine($"ファイルの読み込み中にI/Oエラーが発生しました: {ex.Message}");
+                return;
+            } catch (System.Xml.XmlException ex) {
+                Console.WriteLine($"XMLファイルの形式が正しくありません: {ex.Message}");
+                return;
+            } catch (Exception ex) {
+                Console.WriteLine($"ファイルの読み込みに失敗しました: {ex.Message}");
                 return;
             }
             var wBallSports = wXDocument.Root?.Elements().ToList();
@@ -48,12 +59,11 @@ namespace Practice11_1 {
             Console.WriteLine("-----------解答2-----------");
             try {
                 var wValidSportsForYear = wBallSports
-                    .Select(x => new { Sport = x, Year = (int?)x.Element("firstplayed") })
+                    .Select(x => new { KanjiName = x.Element("name")?.Attribute("kanji")?.Value ?? "漢字なし", Year = (int?)x.Element("firstplayed") })
                     .Where(x => x.Year != null)
                     .OrderBy(x => x.Year);
                 foreach (var wValidSport in wValidSportsForYear) {
-                    var wBallSportKanjiName = wValidSport.Sport.Element("name")?.Attribute("kanji")?.Value ?? "漢字なし";
-                    Console.WriteLine($"競技名: {wBallSportKanjiName}");
+                    Console.WriteLine($"競技名: {wValidSport.KanjiName}");
                 }
             } catch (Exception ex) {
                 Console.WriteLine($"エラーが発生しました: {ex.Message}");
