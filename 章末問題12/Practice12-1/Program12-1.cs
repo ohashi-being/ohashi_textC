@@ -75,5 +75,14 @@ namespace Practice12_1 {
                 Console.WriteLine("\nJSONファイルにシリアル化が完了しました。");
             }
         }
+        /// <summary>
+        /// ファイルパスの妥当性を検証する。
+        /// </summary>
+        /// <param name="vFilePath">読み込み対象のファイルパス</param>
+        /// <param name="vExpectedExtension">期待する拡張子（例：".cs"）</param>
+        private static void ValidateFilePath(string vFilePath, string vExpectedExtension) {
+            if (!File.Exists(vFilePath)) throw new FileNotFoundException($"ファイルが存在しません: {vFilePath}");
+            if (Path.GetExtension(vFilePath) != vExpectedExtension) throw new ArgumentException($"{vExpectedExtension}ファイルではありません。");
+        }
     }
 }
