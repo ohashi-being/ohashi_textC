@@ -19,7 +19,7 @@ namespace Practice13_1.Models {
 
         // public virtual DbSet<MyEntity> MyEntities { get; set; }
         public DbSet<Book> Books { get; set; }
-        public DbSet<Author> Author { get; set; }
+        public DbSet<Author> Authors { get; set; }
     }
 
     //public class MyEntity
