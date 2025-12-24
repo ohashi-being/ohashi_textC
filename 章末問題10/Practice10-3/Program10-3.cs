@@ -39,9 +39,7 @@ namespace Practice10_3 {
         /// <param name="vIsRegex">正規表現として扱うかどうか</param>
         static void ShowMatchIndexes(string vText, string vSearchString, bool vIsRegex) {
             string wRegexPattern = Regex.Escape(vSearchString);
-            if (vIsRegex) {
-                wRegexPattern = $@"\b{wRegexPattern}\b";
-            }
+            if (vIsRegex) wRegexPattern = $@"\b{wRegexPattern}\b";
             var wMatches = Regex.Matches(vText, wRegexPattern, RegexOptions.IgnoreCase);
             if (wMatches.Count == 0) {
                 Console.WriteLine($"{vText}には{vSearchString}は含まれていません。");
