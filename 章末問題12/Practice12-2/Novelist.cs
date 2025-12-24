@@ -27,7 +27,8 @@ namespace Practice12_2 {
         [DataMember(Name = "masterpieces")]
         public string[] Masterpieces { get; set; }
         public override string ToString() {
-            return $"Name: {this.Name}, Birth: {this.Birth}, Masterpieces: {string.Join(", ", this.Masterpieces)}";
+            var wMasterpieces = this.Masterpieces?.Length > 0 ? string.Join(", ", this.Masterpieces) : "代表作なし";
+            return $"Name: {this.Name}, Birth: {this.Birth:yyyy-MM-dd}, Masterpieces: {wMasterpieces}";
         }
     }
 }

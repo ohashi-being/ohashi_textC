@@ -22,7 +22,7 @@ using System.Xml.Serialization;
 namespace Practice12_1 {
     class Program {
         /// <summary>
-        /// XML出力用の設定（定数）
+        /// XML出力用の設定
         /// </summary>
         private static readonly XmlWriterSettings C_XmlSettings = new XmlWriterSettings {
             Indent = true,
@@ -43,14 +43,19 @@ namespace Practice12_1 {
                 ValidateFilePath(@"..\..\Sample12-1-1.xml", ".xml");
                 using (var wReader = XmlReader.Create(@"..\..\Sample12-1-1.xml")) {
                     var wSerializer = new XmlSerializer(typeof(Employee));
-                    var wLoadedEmployee = wSerializer.Deserialize(wReader) as Employee;
-                    if (wLoadedEmployee == null) {
-                        Console.WriteLine("\n逆シリアル化に失敗しました。\n");
-                        return;
-                    }
+                    var wLoadedEmployee = (Employee)wSerializer.Deserialize(wReader);
                     Console.WriteLine($"{wLoadedEmployee}\n\nXMLファイルからの逆シリアル化が完了しました。\n");
                 }
-            } catch (Exception ex) {
+            }
+            catch (InvalidOperationException ex) {
+                Console.WriteLine($"シリアライゼーションエラー: {ex.Message}");
+                return;
+            }
+            catch (IOException ex) {
+                Console.WriteLine($"ファイルアクセスエラー: {ex.Message}");
+                return;
+            }
+            catch (Exception ex) {
                 Console.WriteLine($"エラー: {ex.Message}");
                 return;
             }
@@ -64,12 +69,21 @@ namespace Practice12_1 {
             };
             try {
                 ValidateFilePathForWrite(@"..\..\Sample12-1-2.xml", ".xml");
-                using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-2.xml")) {
+                using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-2.xml",C_XmlSettings)) {
                     var wSerializer = new DataContractSerializer(wEmployees.GetType());
                     wSerializer.WriteObject(wWriter, wEmployees);
                     Console.WriteLine("XMLファイルにシリアル化が完了しました。\n");
                 }
-            } catch (Exception ex) {
+            }
+            catch (InvalidOperationException ex) {
+                Console.WriteLine($"シリアライゼーションエラー: {ex.Message}");
+                return;
+            }
+            catch (IOException ex) {
+                Console.WriteLine($"ファイルアクセスエラー: {ex.Message}");
+                return;
+            }
+            catch (Exception ex) {
                 Console.WriteLine($"エラー: {ex.Message}");
                 return;
             }
@@ -79,17 +93,22 @@ namespace Practice12_1 {
                 ValidateFilePath(@"..\..\Sample12-1-2.xml", ".xml");
                 using (var wReader = XmlReader.Create(@"..\..\Sample12-1-2.xml")) {
                     var wSerializer = new DataContractSerializer(typeof(Employee[]));
-                    var wLoadedEmployees = wSerializer.ReadObject(wReader) as Employee[];
-                    if (wLoadedEmployees == null) {
-                        Console.WriteLine("\n逆シリアル化に失敗しました。\n");
-                        return;
-                    }
+                    var wLoadedEmployees = (Employee[])wSerializer.ReadObject(wReader);
                     foreach (var wLoadedEmployee in wLoadedEmployees) {
                         Console.WriteLine(wLoadedEmployee.ToString());
                     }
                     Console.WriteLine("\nXMLファイルからの逆シリアル化が完了しました。\n");
                 }
-            } catch (Exception ex) {
+            }
+            catch (InvalidOperationException ex) {
+                Console.WriteLine($"シリアライゼーションエラー: {ex.Message}");
+                return;
+            }
+            catch (IOException ex) {
+                Console.WriteLine($"ファイルアクセスエラー: {ex.Message}");
+                return;
+            }
+            catch (Exception ex) {
                 Console.WriteLine($"エラー: {ex.Message}");
                 return;
             }
@@ -103,7 +122,14 @@ namespace Practice12_1 {
                     wSerializer.WriteObject(wStream, wEmployeesForJson);
                     Console.WriteLine("\nJSONファイルにシリアル化が完了しました。");
                 }
-            } catch (Exception ex) {
+            }
+            catch (InvalidOperationException ex) {
+                Console.WriteLine($"シリアライゼーションエラー: {ex.Message}");
+            }
+            catch (IOException ex) {
+                Console.WriteLine($"ファイルアクセスエラー: {ex.Message}");
+            }
+            catch (Exception ex) {
                 Console.WriteLine($"エラー: {ex.Message}");
             }
         }

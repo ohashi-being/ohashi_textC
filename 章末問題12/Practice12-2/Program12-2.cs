@@ -28,16 +28,13 @@ namespace Practice12_2 {
         static void Main(string[] args) {
             Novelist wNoveList;
             try {
-                // XMLファイル読み込み前のバリデーション
                 ValidateFilePath(@"..\..\Sample12-2.xml", ".xml");
                 using (var wReader = XmlReader.Create(@"..\..\Sample12-2.xml")) {
                     var wSerializer = new XmlSerializer(typeof(Novelist));
-                    wNoveList = wSerializer.Deserialize(wReader) as Novelist;
+                    wNoveList = (Novelist)wSerializer.Deserialize(wReader);
                     Console.WriteLine(wNoveList);
                     Console.WriteLine("XMLファイルからの逆シリアル化が完了しました。\n");
                 }
-
-                // JSONファイル書き込み前のバリデーション
                 ValidateFilePathForWrite(@"..\..\Sample12-2.json", ".json");
                 var wSettings = new DataContractJsonSerializerSettings {
                     UseSimpleDictionaryFormat = true,
@@ -48,14 +45,28 @@ namespace Practice12_2 {
                     wSerializer.WriteObject(wStream, wNoveList);
                     Console.WriteLine("JSONファイルにシリアル化が完了しました。");
                 }
+            } catch (InvalidOperationException ex) {
+                Console.WriteLine($"シリアライゼーションエラー: {ex.Message}");
+                if (ex.InnerException != null) {
+                    Console.WriteLine($"詳細: {ex.InnerException.Message}");
+                }
+            } catch (NullReferenceException ex) {
+                Console.WriteLine($"Null参照エラー (データ不完全): {ex.Message}");
+                Console.WriteLine("XMLファイルに必要なデータが不足している可能性があります。");
+            } catch (ArgumentNullException ex) {
+                Console.WriteLine($"引数Nullエラー: {ex.Message}");
             } catch (FileNotFoundException ex) {
                 Console.WriteLine($"ファイルエラー: {ex.Message}");
             } catch (DirectoryNotFoundException ex) {
                 Console.WriteLine($"ディレクトリエラー: {ex.Message}");
             } catch (ArgumentException ex) {
-                Console.WriteLine($"拡張子エラー: {ex.Message}");
+                Console.WriteLine($"引数エラー: {ex.Message}");
+                Console.WriteLine($"例外タイプ: {ex.GetType().Name}");
+            } catch (IOException ex) {
+                Console.WriteLine($"ファイルアクセスエラー: {ex.Message}");
             } catch (Exception ex) {
-                Console.WriteLine($"エラー: {ex.Message}");
+                Console.WriteLine($"予期しないエラー ({ex.GetType().Name}): {ex.Message}");
+                Console.WriteLine($"スタックトレース: {ex.StackTrace}");
             }
         }
         /// <summary>

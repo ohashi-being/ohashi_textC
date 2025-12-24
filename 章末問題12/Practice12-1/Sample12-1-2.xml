@@ -1,1 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?><ArrayOfEmployee xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Practice12_1"><Employee><HireDate>2022-07-21T00:00:00</HireDate><Id>2947</Id><Name>相沢 悠真</Name></Employee><Employee><HireDate>2022-07-21T00:00:00</HireDate><Id>2947</Id><Name>藤原 陽翔</Name></Employee><Employee><HireDate>2021-04-15T00:00:00</HireDate><Id>3021</Id><Name>宮崎 陽菜</Name></Employee><Employee><HireDate>2020-11-30T00:00:00</HireDate><Id>3150</Id><Name>三好 海斗</Name></Employee></ArrayOfEmployee>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEmployee xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Practice12_1">
+  <Employee>
+    <HireDate>2022-07-21T00:00:00</HireDate>
+    <Id>2947</Id>
+    <Name>相沢 悠真</Name>
+  </Employee>
+  <Employee>
+    <HireDate>2022-07-21T00:00:00</HireDate>
+    <Id>2947</Id>
+    <Name>藤原 陽翔</Name>
+  </Employee>
+  <Employee>
+    <HireDate>2021-04-15T00:00:00</HireDate>
+    <Id>3021</Id>
+    <Name>宮崎 陽菜</Name>
+  </Employee>
+  <Employee>
+    <HireDate>2020-11-30T00:00:00</HireDate>
+    <Id>3150</Id>
+    <Name>三好 海斗</Name>
+  </Employee>
+</ArrayOfEmployee>
