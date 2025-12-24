@@ -1,30 +1,23 @@
-﻿using System;
-using System.Data.Entity;
-using System.Linq;
+﻿    using System.Data.Entity;
 
 namespace Practice13_1.Models {
+    /// <summary>
+    /// 書籍と著者の情報を管理する
+    /// </summary>
     public class BooksDbContext : DbContext {
-        // コンテキストは、アプリケーションの構成ファイル (App.config または Web.config) から 'BooksDbContext' 
-        // 接続文字列を使用するように構成されています。既定では、この接続文字列は LocalDb インスタンス上
-        // の 'Practice13_1.Models.BooksDbContext' データベースを対象としています。 
-        // 
-        // 別のデータベースとデータベース プロバイダーまたはそのいずれかを対象とする場合は、
-        // アプリケーション構成ファイルで 'BooksDbContext' 接続文字列を変更してください。
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public BooksDbContext()
             : base("name=BooksDbContext") {
         }
-
-        // モデルに含めるエンティティ型ごとに DbSet を追加します。Code First モデルの構成および使用の
-        // 詳細については、http://go.microsoft.com/fwlink/?LinkId=390109 を参照してください。
-
-        // public virtual DbSet<MyEntity> MyEntities { get; set; }
+        /// <summary>
+        /// 書籍の追加、更新、削除、検索操作を行う
+        /// </summary>
         public DbSet<Book> Books { get; set; }
+        /// <summary>
+        /// 著者の追加、更新、削除、検索操作を行う
+        /// </summary>
         public DbSet<Author> Authors { get; set; }
     }
-
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
 }
