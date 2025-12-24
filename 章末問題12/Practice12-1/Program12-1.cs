@@ -21,13 +21,21 @@ using System.Xml.Serialization;
 */
 namespace Practice12_1 {
     class Program {
+        /// <summary>
+        /// XML出力用の設定（定数）
+        /// </summary>
+        private static readonly XmlWriterSettings C_XmlSettings = new XmlWriterSettings {
+            Indent = true,
+            IndentChars = "  ",
+            OmitXmlDeclaration = false
+        };
         static void Main(string[] args) {
             var wEmployee = new Employee(2947, "相沢 悠真", new DateTime(2022, 7, 21));
             // 解答1
             Console.WriteLine("-------------解答1-------------");
             try {
                 ValidateFilePathForWrite(@"..\..\Sample12-1-1.xml", ".xml");
-                using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-1.xml")) {
+                using (var wWriter = XmlWriter.Create(@"..\..\Sample12-1-1.xml", C_XmlSettings)) {
                     var wSerializer = new XmlSerializer(wEmployee.GetType());
                     wSerializer.Serialize(wWriter, wEmployee);
                     Console.WriteLine("XMLファイルにシリアル化が完了しました。\n");
