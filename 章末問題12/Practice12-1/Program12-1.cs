@@ -26,8 +26,6 @@ namespace Practice12_1 {
         /// </summary>
         private static readonly XmlWriterSettings C_XmlSettings = new XmlWriterSettings {
             Indent = true,
-            IndentChars = "  ",
-            OmitXmlDeclaration = false
         };
         static void Main(string[] args) {
             var wEmployee = new Employee(2947, "相沢 悠真", new DateTime(2022, 7, 21));
