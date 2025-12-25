@@ -21,10 +21,14 @@ namespace Practice10_3 {
                 "It will take time.",
                 "We reorganized the timetable.",
             };
+            // 部分一致での検索結果を表示
+            Console.WriteLine("--- 部分一致検索 ---");
             foreach (var wText in wTexts) {
                 ShowMatchIndexes(wText, "time", false);
             }
             Console.WriteLine();
+            // 完全一致での検索結果を表示
+            Console.WriteLine("--- 完全一致検索 ---");
             foreach (var wText in wTexts) {
                 ShowMatchIndexes(wText, "time", true);
             }
@@ -36,10 +40,10 @@ namespace Practice10_3 {
         /// </summary>
         /// <param name="vText">検索するテキスト</param>
         /// <param name="vSearchString">検索文字列または正規表現パターン</param>
-        /// <param name="vIsRegex">正規表現として扱うかどうか</param>
-        static void ShowMatchIndexes(string vText, string vSearchString, bool vIsRegex) {
+        /// <param name="vIsExactMatch">完全一致しているかどうか</param>
+        static void ShowMatchIndexes(string vText, string vSearchString, bool vIsExactMatch) {
             string wRegexPattern = Regex.Escape(vSearchString);
-            if (vIsRegex) wRegexPattern = $@"\b{wRegexPattern}\b";
+            if (vIsExactMatch) wRegexPattern = $@"\b{wRegexPattern}\b";
             var wMatches = Regex.Matches(vText, wRegexPattern, RegexOptions.IgnoreCase);
             if (wMatches.Count == 0) {
                 Console.WriteLine($"{vText}には{vSearchString}は含まれていません。");
