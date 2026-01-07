@@ -1,6 +1,8 @@
-﻿using Practice13_1.Models;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using Practice13_1.Models;
 
 /* 問題13.1
 本文で利用したデータベースを利用し、以下のコードを書いてください。
@@ -19,93 +21,156 @@ using System.Linq;
 
 4.発行年の古い順に3冊だけ書籍を取得し、そのタイトルと著者名を求めてください。
 
-5.著者事に書籍のタイトルと発行年を表示してください。なお、著者は誕生日の遅い順に並べてください。
+5.著者ごとに書籍のタイトルと発行年を表示してください。なお、著者は誕生日の遅い順に並べてください。
 */
 namespace Practice13_1 {
     class Program {
         static void Main(string[] args) {
             ResetDatabaseWithIdReset();
-            InsertBooks(
-                new Book("坊ちゃん", 2003, "夏目漱石", new DateTime(1867, 2, 9), "M"),
-                new Book("人間失格", 1990, "太宰治", new DateTime(1909, 6, 19), "M"),
-                new Book("みだれ髪", 1901, "与謝野晶子", new DateTime(1878, 12, 7), "F"),
-                new Book("銀河鉄道の夜", 1927, "宮沢賢治", new DateTime(1896, 8, 27), "M"));
+            ShowAuthors(new[] {
+                new Author("夏目漱石", new DateTime(1867, 2, 9),Gender.Male),
+                new Author("太宰治", new DateTime(1909, 6, 19),Gender.Male),
+                new Author("与謝野晶子", new DateTime(1878, 12, 7), Gender.Female),
+                new Author("宮沢賢治", new DateTime(1896, 8, 27), Gender.Male),
+                new Author("川端康成", new DateTime(1899, 6, 14), Gender.Male),
+                new Author("菊池寛", new DateTime(1888, 12, 26), Gender.Male)});
+
             Console.WriteLine($"\n{new string('=', 50)}");
-            InsertBooks(
-                new Book("こころ", 1991, "夏目漱石", new DateTime(1867, 2, 9), "M"),
-                new Book("伊豆の踊子", 2003, "川端康成", new DateTime(1899, 6, 14), "M"),
-                new Book("真珠夫人", 2002, "菊池寛", new DateTime(1888, 12, 26), "M"),
-                new Book("注文の多い料理店", 2000, "宮沢賢治", new DateTime(1896, 8, 27), "M"),
-                new Book(null, 2025, null, new DateTime(2001, 7, 14), "F"));
+            ShowBooks(new[] {
+                CreateBookWithExistingAuthor("坊ちゃん", 2003, "夏目漱石"),
+                CreateBookWithExistingAuthor("人間失格", 1990, "太宰治"),
+                CreateBookWithExistingAuthor("みだれ髪", 1901, "与謝野晶子"),
+                CreateBookWithExistingAuthor("銀河鉄道の夜", 1927, "宮沢賢治")});
+
+            Console.WriteLine($"\n{new string('=', 50)}");
+
+            ShowBooks(new[] {
+                CreateBookWithExistingAuthor("こころ", 1991, "夏目漱石"),
+                CreateBookWithExistingAuthor("伊豆の踊子", 2003, "川端康成"),
+                CreateBookWithExistingAuthor("真珠夫人", 2002, "菊池寛"),
+                CreateBookWithExistingAuthor("注文の多い料理店", 2000, "宮沢賢治")});
+
             ShowAllBooksInfo();
-            DisplayLongestTitleBooks();
-            DisplayOldestThreeBooks();
-            DisplayBooksByAuthorBirthdayDesc();
+            DisplayBooks(GetLongestTitleBooks());
+            var wOldestBooks = 3;
+            DisplayBooks(GetOldestBooks(wOldestBooks));
+            ShowAuthorsByBooks(GetAuthorsByBirthdayDesc());
             Console.WriteLine("\nEnterキーを押して終了してください...");
             Console.ReadKey();
         }
         /// <summary>
-        /// 書籍の情報をデータベースに追加する
+        /// 著者をデータベースに登録する
         /// </summary>
-        /// <param name="vBooks">追加する書籍</param>
-        static void InsertBooks(params Book[] vBooks) {
+        /// <param name="vAuthors">登録する著者のコレクション</param>
+        /// <returns>登録された著者のコレクション</returns>
+        static IEnumerable<Author> RegisterAuthors(IEnumerable<Author> vAuthors) {
             using (var wDataBase = new BooksDbContext()) {
-                Console.WriteLine("\n--- 以下のデータを追加 ---");
-                foreach (var wBook in vBooks) {
-                    var wAuthor = GetAuthorInfo(wDataBase, wBook.Author);
-                    GetBookInfo(wDataBase, wBook, wAuthor);
+                var wAddedAuthors = new List<Author>();
+                foreach (var wAuthor in vAuthors) {
+                    if (wAuthor == null || string.IsNullOrWhiteSpace(wAuthor.Name)) {
+                        Console.WriteLine("無効な著者データがあります。");
+                        continue;
+                    }
+                    if (wDataBase.Authors.FirstOrDefault(x => x.Name == wAuthor.Name) != null &&
+                        !wAddedAuthors.Any(x => x.Name == wAuthor.Name)) {
+                        Console.WriteLine($"著者「{wAuthor.Name}」は既にデータベースに存在します。");
+                    }
+                    wDataBase.Authors.Add(wAuthor);
+                    wAddedAuthors.Add(wAuthor);
                 }
                 wDataBase.SaveChanges();
+                return wAddedAuthors;
             }
         }
         /// <summary>
-        /// 著者の情報を取得する
+        /// 著者情報をコンソールに表示する
         /// </summary>
-        /// <param name="vDataBase">データベースコンテキスト</param>
-        /// <param name="vAuthor">情報を取得したい著者</param>
-        /// <returns>著書の情報</returns>
-        static Author GetAuthorInfo(BooksDbContext vDataBase, Author vAuthor) {
-            if (vAuthor == null || String.IsNullOrWhiteSpace(vAuthor.Name)) {
-                Console.WriteLine("著者の名前が設定されていません。スキップします。");
-                return null;
+        /// <param name="vAuthors">登録する著者のコレクション</param>
+        static void ShowAuthors(IEnumerable<Author> vAuthors) {
+            Console.WriteLine("\n--- 著者の登録 ---");
+            var wAuthorList = vAuthors?.ToList();
+            if (wAuthorList == null || !wAuthorList.Any()) {
+                Console.WriteLine("登録する著者データがありません。");
+                return;
             }
-            var wExistAuthor = vDataBase.Authors.FirstOrDefault(x => x.Name == vAuthor.Name);
-            if (wExistAuthor != null) {
-                Console.WriteLine($"著者「{vAuthor.Name}」は既に存在します。");
-                return wExistAuthor;
+            var wAddedAuthors = RegisterAuthors(wAuthorList);
+            foreach (var wAuthor in wAddedAuthors) {
+                Console.WriteLine($"著者「{wAuthor.Name}」を登録しました。");
             }
-            var wNewAuthor = new Author(vAuthor.Name, vAuthor.Birthday, vAuthor.Gender);
-            vDataBase.Authors.Add(wNewAuthor);
-            Console.WriteLine($"著者「{vAuthor.Name}」を追加しました。");
-            return wNewAuthor;
+            Console.WriteLine($"登録完了: {wAddedAuthors.Count()}件");
         }
         /// <summary>
-        /// 書籍の情報を取得する
+        /// 既存の著者を参照してBookオブジェクトを作成する
         /// </summary>
-        /// <param name="vDataBase">データベースコンテキスト</param>
-        /// <param name="vBook">追加する書籍の情報</param>
-        /// <param name="vAuthor"></param>
-        static void GetBookInfo(BooksDbContext vDataBase, Book vBook, Author vAuthor) {
-            if (String.IsNullOrWhiteSpace(vBook.Title)) {
-                Console.WriteLine($"タイトルが設定されていません。スキップします。");
+        /// <param name="vTitle">書籍タイトル</param>
+        /// <param name="vYear">出版年</param>
+        /// <param name="vAuthorName">著者名</param>
+        /// <returns>作成されたBookオブジェクト（著者が見つからない場合はnull）</returns>
+        static Book CreateBookWithExistingAuthor(string vTitle, int vYear, string vAuthorName) {
+            using (var wDataBase = new BooksDbContext()) {
+                var vAuthor = wDataBase.Authors.FirstOrDefault(x => x.Name == vAuthorName);
+                if (vAuthor == null) {
+                    Console.WriteLine($"著者「{vAuthorName}」が見つかりません。書籍「{vTitle}」をスキップします。");
+                    return null;
+                }
+                return new Book(vTitle, vYear, vAuthor);
+            }
+        }
+        /// <summary>
+        /// 書籍をデータベースに登録する
+        /// </summary>
+        /// <param name="vBooks">登録する書籍のコレクション</param>
+        /// <returns>登録された書籍のコレクション</returns>
+        static IEnumerable<Book> RegisterBooks(IEnumerable<Book> vBooks) {
+            using (var wDataBase = new BooksDbContext()) {
+                var wAddedBooks = new List<Book>();
+                foreach (var wBook in vBooks) {
+                    if (wBook == null || string.IsNullOrWhiteSpace(wBook.Title)) {
+                        Console.WriteLine("書籍データが無効です。");
+                        continue;
+                    }
+                    if (wBook.Author == null) {
+                        Console.WriteLine($"書籍「{wBook.Title}」の著者情報が無効です。");
+                        continue;
+                    }
+                    var wExistingAuthor = wDataBase.Authors.FirstOrDefault(x => x.Id == wBook.Author.Id);
+                    if (wExistingAuthor != null) {
+                        wBook.Author = wExistingAuthor;
+                    } else {
+                        wDataBase.Authors.Attach(wBook.Author);
+                    }
+                    var wExistingBook = wDataBase.Books.FirstOrDefault(x => x.Title == wBook.Title && x.Author.Id == wBook.Author.Id);
+                    if (wExistingBook != null) {
+                        Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)は既にデータベースに存在します。");
+                        continue;
+                    }
+                    wDataBase.Books.Add(wBook);
+                    wAddedBooks.Add(wBook);
+                }
+                wDataBase.SaveChanges();
+                return wAddedBooks;
+            }
+        }
+        /// <summary>
+        /// 書籍情報をコンソールに表示する
+        /// </summary>
+        /// <param name="vBooks">登録する書籍のコレクション</param>
+        static void ShowBooks(IEnumerable<Book> vBooks) {
+            Console.WriteLine("\n--- 書籍の登録 ---");
+            var wBookList = vBooks?.ToList();
+            if (wBookList == null || !wBookList.Any()) {
+                Console.WriteLine("登録する書籍データがありません。");
                 return;
             }
-            if (vAuthor == null) {
-                Console.WriteLine($"著者情報が無効です。スキップします。");
-                return;
+            var wAddedBooks = RegisterBooks(wBookList);
+            foreach (var wBook in wAddedBooks) {
+                Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)を登録しました。");
             }
-            var wExistBook = vDataBase.Books.FirstOrDefault(x => x.Title == vBook.Title && x.Author.Name == vAuthor.Name);
-            if (wExistBook != null) {
-                Console.WriteLine(
-                    $"書籍「{vBook.Title}」({vAuthor.Name}著) は既に存在します。"
-                );
-                return;
+            var wSkippedCount = wBookList.Where(x => x != null).Count() - wAddedBooks.Count();
+            if (wSkippedCount > 0) {
+                Console.WriteLine($"{wSkippedCount}件の書籍データをスキップしました。");
             }
-            var wNewBook = new Book(vBook.Title, vBook.PublishedYear, vAuthor);
-            vDataBase.Books.Add(wNewBook);
-            Console.WriteLine(
-                $"書籍「{vBook.Title}」({vAuthor.Name}著) を追加しました。"
-            );
+            Console.WriteLine($"登録完了: {wAddedBooks.Count()}件");
         }
         /// <summary>
         /// すべての書籍情報を表示する
@@ -113,7 +178,7 @@ namespace Practice13_1 {
         static void ShowAllBooksInfo() {
             using (var wDataBase = new BooksDbContext()) {
                 Console.WriteLine("\n--- 2. すべての書籍情報 ---");
-                var wBooks = wDataBase.Books.Include("Author").ToList();
+                var wBooks = wDataBase.Books.Include(x => x.Author).ToList();
                 foreach (var wBook in wBooks) {
                     Console.WriteLine($"ID: {wBook.Id}, {wBook}");
                 }
@@ -123,56 +188,77 @@ namespace Practice13_1 {
         /// <summary>
         /// タイトルが最も長い書籍を表示する
         /// </summary>
-        static void DisplayLongestTitleBooks() {
+        /// <returnsタイトルが最も長い書籍の書籍のコレクション（複数ある可能性があるため）</returns>
+        static IEnumerable<Book> GetLongestTitleBooks() {
             using (var wDataBase = new BooksDbContext()) {
                 Console.WriteLine("\n--- 3. タイトルが最も長い書籍 ---");
-                if (!wDataBase.Books.Any()) {
-                    Console.WriteLine("書籍が登録されていません。");
-                    return;
+                var wAllBooks = wDataBase.Books.Include(x => x.Author).ToList();
+                if (!wAllBooks.Any()) {
+                    return new List<Book>();
                 }
-                var wMaxTitleLength = wDataBase.Books.Max(x => x.Title.Length);
-                var wLongestBooks = wDataBase.Books.Include("Author").Where(x => x.Title.Length == wMaxTitleLength).ToList();
-                foreach (var wBook in wLongestBooks) {
-                    Console.WriteLine(wBook);
-                }
+                var wMaxTitleLength = wAllBooks.Max(x => x.Title.Length);
+                return wAllBooks.Where(x => x.Title.Length == wMaxTitleLength);
             }
         }
         /// <summary>
-        /// 発行年の古い順に3冊表示する
+        /// 発行年の古い順に指定件数の書籍を取得する
         /// </summary>
-        static void DisplayOldestThreeBooks() {
+        /// <param name="vCount">取得する書籍の件数</param>
+        /// <returns>発行年の古い順の書籍のコレクション</returns>
+        static IEnumerable<Book> GetOldestBooks(int vCount) {
             using (var wDataBase = new BooksDbContext()) {
-                Console.WriteLine("\n--- 4. 発行年の古い順に3冊 ---");
-                if (!wDataBase.Books.Any()) {
-                    Console.WriteLine("書籍が登録されていません。");
-                    return;
+                if (vCount <= 0) {
+                    return new List<Book>();
                 }
-                var wOldBooks = wDataBase.Books.Include("Author").OrderBy(x => x.PublishedYear).Take(3).ToList();
-                foreach (var wBook in wOldBooks) {
-                    Console.WriteLine(wBook);
-                }
+                Console.WriteLine($"\n--- 4. 発行年の古い順に{vCount}冊 ---");
+                return wDataBase.Books
+                    .Include(x => x.Author)
+                    .OrderBy(x => x.PublishedYear)
+                    .Take(vCount)
+                    .ToList();
             }
         }
         /// <summary>
-        /// 著者別に書籍の情報を表示する
-        /// 著者は誕生日の遅い順（降順）で並べ、各著者の書籍は発行年の古い順で表示
+        /// 書籍のコレクションを表示する
         /// </summary>
-        static void DisplayBooksByAuthorBirthdayDesc() {
-            using (var wDataBase = new BooksDbContext()) {
-                Console.WriteLine("\n--- 5. 著者別書籍表示（誕生日の遅い順） ---");
-                var wAuthors = wDataBase.Authors.Include("Books").OrderByDescending(x => x.Birthday).ToList();
-                if (!wAuthors.Any()) {
-                    Console.WriteLine("著者が登録されていません。");
-                    return;
-                }
-                foreach (var wAuthor in wAuthors) {
-                    Console.WriteLine($"\n{wAuthor}");
-                    foreach (var wBook in wAuthor.Books.OrderBy(x => x.PublishedYear)) {
-                        Console.WriteLine($"  - {wBook.ToStringWithoutAuthor()}");
-                    }
-                }
-                Console.WriteLine();
+        /// <param name="vBooks">表示する書籍のコレクション</param>
+        static void DisplayBooks(IEnumerable<Book> vBooks) {
+            var wBookList = vBooks?.ToList();
+            if (wBookList == null || !wBookList.Any()) {
+                Console.WriteLine("書籍が登録されていません。");
+                return;
             }
+            foreach (var wBook in wBookList) {
+                Console.WriteLine(wBook);
+            }
+        }
+        /// <summary>
+        /// 誕生日の降順で著者を取得する（書籍も含む）
+        /// </summary>
+        /// <returns>誕生日の遅い順の著者のコレクション</returns>
+        static IEnumerable<Author> GetAuthorsByBirthdayDesc() {
+            using (var wDataBase = new BooksDbContext()) {
+                return wDataBase.Authors.Include(x => x.Books).OrderByDescending(x => x.Birthday).ToList();
+            }
+        }
+        /// <summary>
+        /// 著者のコレクションを著者別書籍形式で表示する
+        /// </summary>
+        /// <param name="vAuthors">表示する著者のコレクション</param>
+        /// <param name="vTitle">表示セクションのタイトル</param>
+        static void ShowAuthorsByBooks(IEnumerable<Author> vAuthors) {
+            Console.WriteLine($"\n--- 5. 著者別書籍表示（誕生日の遅い順） ---");
+            if (vAuthors == null || !vAuthors.Any()) {
+                Console.WriteLine("著者が登録されていません。");
+                return;
+            }
+            foreach (var wAuthor in vAuthors) {
+                Console.WriteLine($"\n{wAuthor}");
+                foreach (var wBook in wAuthor.Books.OrderBy(x => x.PublishedYear)) {
+                    Console.WriteLine($"  - {wBook.ToStringWithoutAuthor()}");
+                }
+            }
+            Console.WriteLine();
         }
         // 削除用に保管しています
         /// <summary>
