@@ -28,6 +28,7 @@ namespace Practice14_4 {
         /// <summary>
         /// WebException発生時のエラーメッセージ表示
         /// </summary>
+        /// <param name="vWebException">WebExceptionの例外オブジェクト</param>
         static void ShowWebErrorMessage(WebException vWebException) {
             if (vWebException.Response == null) {
                 Console.WriteLine("Webページを取得できませんでした。");

@@ -12,14 +12,14 @@ using System.Configuration;
 namespace Practice14_3 {
     internal class Program {
         static void Main(string[] args) {
-            var myAppSettings = ConfigurationManager.GetSection("myAppSettings") as MyAppSettings;
-            if (myAppSettings != null) {
-                var calendarOption = myAppSettings.CalenderOption;
+            var wMyAppSettings = ConfigurationManager.GetSection("myAppSettings") as MyAppSettings;
+            if (wMyAppSettings != null) {
+                var wCalendarOption = wMyAppSettings.CalenderOption;
                 Console.WriteLine("=== Calendar Option ===");
-                Console.WriteLine($"StringFormat     : {calendarOption.StringFormat}");
-                Console.WriteLine($"Minimum          : {calendarOption.Minimum}");
-                Console.WriteLine($"Maximum          : {calendarOption.Maximum}");
-                Console.WriteLine($"MondayIsFirstDay : {calendarOption.MondayIsFirstDay}");
+                Console.WriteLine($"StringFormat     : {wCalendarOption.StringFormat}");
+                Console.WriteLine($"Minimum          : {wCalendarOption.Minimum}");
+                Console.WriteLine($"Maximum          : {wCalendarOption.Maximum}");
+                Console.WriteLine($"MondayIsFirstDay : {wCalendarOption.MondayIsFirstDay}");
             } else {
                 Console.WriteLine("myAppSettingsセクションが見つかりません。");
             }
