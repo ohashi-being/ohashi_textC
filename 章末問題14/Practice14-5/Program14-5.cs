@@ -26,12 +26,7 @@ namespace Practice14_5 {
                 wTargetExtension = "." + wTargetExtension;
             }
             try {
-                int wExtractedCount = ExtractFilesByExtension(wZipFilePath, wOutputFolder, wTargetExtension);
-                if (wExtractedCount > 0) {
-                    Console.WriteLine($"\n抽出が完了しました。合計 {wExtractedCount} 個のファイルを抽出しました。");
-                } else {
-                    Console.WriteLine($"\n拡張子 '{wTargetExtension}' のファイルがZIP内に見つかりませんでした。");
-                }
+                ExtractFilesByExtension(wZipFilePath, wOutputFolder, wTargetExtension);
                 Console.WriteLine($"{Environment.NewLine}終了するには何かキーを押してください...");
                 Console.ReadKey();
             } catch (FileNotFoundException ex) {
@@ -51,8 +46,7 @@ namespace Practice14_5 {
         /// <param name="vZipFilePath">ZIPファイルのパス</param>
         /// <param name="vOutputFolder">出力先フォルダのパス</param>
         /// <param name="vTargetExtension">抽出対象の拡張子</param>
-        /// <returns>抽出したファイルの数</returns>
-        static int ExtractFilesByExtension(string vZipFilePath, string vOutputFolder, string vTargetExtension) {
+        static void ExtractFilesByExtension(string vZipFilePath, string vOutputFolder, string vTargetExtension) {
             if (!File.Exists(vZipFilePath)) {
                 throw new FileNotFoundException($"ZIPファイルが見つかりません: {vZipFilePath}");
             }
@@ -70,7 +64,11 @@ namespace Practice14_5 {
                     }
                 }
             }
-            return wExtractedCount;
+            if (wExtractedCount > 0) {
+                Console.WriteLine($"\n抽出が完了しました。合計 {wExtractedCount} 個のファイルを抽出しました。");
+            } else {
+                Console.WriteLine($"\n拡張子 '{vTargetExtension}' のファイルがZIP内に見つかりませんでした。");
+            }
         }
         /// <summary>
         /// エントリが対象ファイルかどうかを判定する
