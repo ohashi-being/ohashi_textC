@@ -21,12 +21,11 @@ namespace Practice14_1 {
                 return;
             }
             var wLines = File.ReadAllLines(wFilePath);
-            if (wLines == null || wLines.Length == 0) {
+            if (!wLines.Any()) {
                 Console.WriteLine("コマンドファイルにデータがありません。");
                 return;
             }
-            if (wLines.Count(x => !string.IsNullOrWhiteSpace(x) &&
-                                  !string.IsNullOrWhiteSpace(x.Split('|')[0].Trim())) == 0) {
+            if (!wLines.Any(x => !string.IsNullOrWhiteSpace(x.Split('|')[0].Trim()))) {
                 Console.WriteLine("有効なコマンドが見つかりませんでした。");
                 return;
             }
@@ -52,23 +51,16 @@ namespace Practice14_1 {
         /// <param name="vLines">実行するコマンドライン配列</param>
         static void ExecuteCommands(string[] vLines) {
             foreach (var wLine in vLines) {
-                if (string.IsNullOrWhiteSpace(wLine))
-                    continue;
+                if (string.IsNullOrWhiteSpace(wLine)) continue;
                 var wInfo = CreateStartInfo(wLine);
-                if (string.IsNullOrWhiteSpace(wInfo.FileName))
-                    continue;
-                if (Path.IsPathRooted(wInfo.FileName) && !File.Exists(wInfo.FileName)) {
-                    Console.WriteLine($"プログラムが見つかりません: {wInfo.FileName}");
-                    continue;
-                }
+                if (string.IsNullOrWhiteSpace(wInfo.FileName)) continue;
                 Console.WriteLine($"実行中: {wInfo.FileName} {wInfo.Arguments}");
-                using (var wProcess = Process.Start(wInfo)) {
-                    if (wProcess != null) {
-                        wProcess.WaitForExit();
-                    } else {
-                        Console.WriteLine($"プロセスの起動に失敗しました: {wInfo.FileName}");
-                    }
+                try {
+                    using (var wProcess = Process.Start(wInfo)) wProcess.WaitForExit();
+                } catch (Exception) {
+                    Console.WriteLine($"プロセスの起動に失敗しました: {wInfo.FileName}");
                 }
+
             }
         }
     }

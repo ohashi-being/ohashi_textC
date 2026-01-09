@@ -10,7 +10,7 @@ namespace Practice14_2 {
     class Program {
         static void Main(string[] args) {
             var wAssembly = Assembly.GetExecutingAssembly();
-            var wAssemblyVersion = wAssembly.GetName()?.Version;
+            var wAssemblyVersion = wAssembly.GetName().Version;
             Console.WriteLine("=== バージョン情報 ===");
             Console.WriteLine($"Assembly Version : {wAssemblyVersion?.ToString() ?? "不明"}");
             if (!string.IsNullOrEmpty(wAssembly.Location)) {

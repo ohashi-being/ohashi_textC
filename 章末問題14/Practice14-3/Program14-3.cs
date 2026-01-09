@@ -14,7 +14,7 @@ namespace Practice14_3 {
         static void Main(string[] args) {
             var wMyAppSettings = ConfigurationManager.GetSection("myAppSettings") as MyAppSettings;
             if (wMyAppSettings != null) {
-                var wCalendarOption = wMyAppSettings.CalenderOption;
+                var wCalendarOption = wMyAppSettings.CalendarOption;
                 Console.WriteLine("=== Calendar Option ===");
                 Console.WriteLine($"StringFormat     : {wCalendarOption.StringFormat}");
                 Console.WriteLine($"Minimum          : {wCalendarOption.Minimum}");

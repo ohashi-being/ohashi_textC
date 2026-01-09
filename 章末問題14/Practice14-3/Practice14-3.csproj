@@ -48,7 +48,7 @@
     <Compile Include="MyAppSettings.cs" />
     <Compile Include="Program14-3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TraceOptioncs.cs" />
+    <Compile Include="TraceOption.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

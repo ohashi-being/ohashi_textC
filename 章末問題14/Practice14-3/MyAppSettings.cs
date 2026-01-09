@@ -14,7 +14,7 @@ namespace Practice14_3 {
         /// カレンダーオプションの設定
         /// </summary>
         [ConfigurationProperty("CalendarOption")]
-        public CalendarOption CalenderOption {
+        public CalendarOption CalendarOption {
             get { return (CalendarOption)this["CalendarOption"]; }
             set { this["CalendarOption"] = value; }
         }

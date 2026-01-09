@@ -30,14 +30,9 @@ namespace Practice14_4 {
         /// </summary>
         /// <param name="vWebException">WebExceptionの例外オブジェクト</param>
         static void ShowWebErrorMessage(WebException vWebException) {
-            if (vWebException.Response == null) {
-                Console.WriteLine("Webページを取得できませんでした。");
-                Console.WriteLine("URLを確認してください。");
-                return;
-            }
             if (vWebException.Response is HttpWebResponse wResponse && wResponse.StatusCode == HttpStatusCode.NotFound) {
                 Console.WriteLine("指定したページが見つかりませんでした。");
-                Console.WriteLine("URLが正しいか確認してください。");
+                Console.WriteLine("URLを確認してください。");
                 return;
             }
             Console.WriteLine("Webページの取得に失敗しました。");
