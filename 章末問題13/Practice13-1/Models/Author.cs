@@ -21,7 +21,7 @@ namespace Practice13_1.Models {
         /// <summary>
         /// 著者の性別
         /// </summary>
-        public Gender Gender { get; set; }
+        public GenderEnum Gender { get; set; }
         /// <summary>
         /// この著者が執筆した書籍のコレクション
         /// </summary>
@@ -39,7 +39,7 @@ namespace Practice13_1.Models {
         /// <param name="vName">著者名</param>
         /// <param name="vBirthday">著者の誕生日</param>
         /// <param name="vGender">著者の性別</param>
-        public Author(string vName, DateTime vBirthday, Gender vGender) : this() {
+        public Author(string vName, DateTime vBirthday, GenderEnum vGender) : this() {
             this.Name = vName;
             this.Birthday = vBirthday;
             this.Gender = vGender;

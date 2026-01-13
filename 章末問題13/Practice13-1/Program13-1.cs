@@ -26,14 +26,17 @@ using Practice13_1.Models;
 namespace Practice13_1 {
     class Program {
         static void Main(string[] args) {
-            ResetDatabaseWithIdReset();
+            if (!IsModelCompatibleWithDatabase()) {
+                RecreateDatabase();
+            }
+            // ResetDatabaseWithIdReset();
             var wAuthorsToRegister = new[] {
-                new Author("夏目漱石", new DateTime(1867, 2, 9), Gender.Male),
-                new Author("太宰治", new DateTime(1909, 6, 19), Gender.Male),
-                new Author("与謝野晶子", new DateTime(1878, 12, 7), Gender.Female),
-                new Author("宮沢賢治", new DateTime(1896, 8, 27), Gender.Male),
-                new Author("川端康成", new DateTime(1899, 6, 14), Gender.Male),
-                new Author("菊池寛", new DateTime(1888, 12, 26), Gender.Male)
+                new Author("夏目漱石", new DateTime(1867, 2, 9), GenderEnum.Male),
+                new Author("太宰治", new DateTime(1909, 6, 19), GenderEnum.Male),
+                new Author("与謝野晶子", new DateTime(1878, 12, 7), GenderEnum.Female),
+                new Author("宮沢賢治", new DateTime(1896, 8, 27), GenderEnum.Male),
+                new Author("川端康成", new DateTime(1899, 6, 14), GenderEnum.Male),
+                new Author("菊池寛", new DateTime(1888, 12, 26), GenderEnum.Male)
             };
             var wAddedAuthors = RegisterAuthors(wAuthorsToRegister);
             DisplayAuthors(wAddedAuthors);
@@ -84,6 +87,7 @@ namespace Practice13_1 {
                     if (wDataBase.Authors.FirstOrDefault(x => x.Name == wAuthor.Name) != null &&
                         !wAddedAuthors.Any(x => x.Name == wAuthor.Name)) {
                         Console.WriteLine($"著者「{wAuthor.Name}」は既にデータベースに存在します。");
+                        continue;
                     }
                     wDataBase.Authors.Add(wAuthor);
                     wAddedAuthors.Add(wAuthor);
@@ -175,12 +179,12 @@ namespace Practice13_1 {
         /// <returns>作成されたBookオブジェクト</returns>
         static Book CreateBookWithExistingAuthor(string vTitle, int vYear, string vAuthorName) {
             using (var wDataBase = new BooksDbContext()) {
-                var vAuthor = wDataBase.Authors.FirstOrDefault(x => x.Name == vAuthorName);
-                if (vAuthor == null) {
+                var wAuthor = wDataBase.Authors.FirstOrDefault(x => x.Name == vAuthorName);
+                if (wAuthor == null) {
                     Console.WriteLine($"著者「{vAuthorName}」が見つかりません。書籍「{vTitle}」をスキップします。");
                     return null;
                 }
-                return new Book(vTitle, vYear, vAuthor);
+                return new Book(vTitle, vYear, wAuthor);
             }
         }
 
@@ -280,6 +284,56 @@ namespace Practice13_1 {
             }
             Console.WriteLine();
         }
+        #region データベースのチェックと再作成
+        /// <summary>
+        /// データベースとモデルの互換性をチェックする
+        /// </summary>
+        /// <returns>互換性があるかどうか</returns>
+        static bool IsModelCompatibleWithDatabase() {
+            using (var wDataBase = new BooksDbContext()) {
+                try {
+                    if (!wDataBase.Database.Exists()) {
+                        Console.WriteLine("データベースが存在しません。");
+                        return false;
+                    }
+
+                    bool wIsCompatible = wDataBase.Database.CompatibleWithModel(throwIfNoMetadata: false);
+
+                    if (wIsCompatible) {
+                        Console.WriteLine("データベーススキーマは互換性があります。");
+                    } else {
+                        Console.WriteLine("データベーススキーマがモデルと互換性がありません。");
+                    }
+
+                    return wIsCompatible;
+                } catch (Exception ex) {
+                    Console.WriteLine($"互換性チェック中にエラーが発生しました: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// データベースを再作成する
+        /// </summary>
+        static void RecreateDatabase() {
+            using (var wDataBase = new BooksDbContext()) {
+                try {
+                    if (wDataBase.Database.Exists()) {
+                        Console.WriteLine("既存のデータベースを削除しています...");
+                        wDataBase.Database.Delete();
+                    }
+
+                    Console.WriteLine("データベースを作成しています...");
+                    wDataBase.Database.Create();
+                    Console.WriteLine("データベースの作成が完了しました。");
+                } catch (Exception ex) {
+                    Console.WriteLine($"データベースの再作成中にエラーが発生しました: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
         // 削除用に保管しています
         /// <summary>
         /// データをリセットする（IDもリセット）
@@ -294,5 +348,6 @@ namespace Practice13_1 {
                 Console.WriteLine("データベースをリセットしました。次のIDは1から始まります。");
             }
         }
+        #endregion
     }
 }

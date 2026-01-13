@@ -2,7 +2,7 @@
     /// <summary>
     /// 著者の性別
     /// </summary>
-    public enum Gender {
+    public enum GenderEnum {
         /// <summary>
         /// 不明
         /// </summary>

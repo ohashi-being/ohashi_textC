@@ -45,7 +45,7 @@ namespace Practice13_1.Models {
         /// <param name="vAuthorName">著者名</param>
         /// <param name="vAuthorBirthday">著者の誕生日</param>
         /// <param name="vAuthorGender">著者の性別</param>
-        public Book(string vTitle, int vPublishedYear, string vAuthorName, DateTime vAuthorBirthday, Gender vAuthorGender) {
+        public Book(string vTitle, int vPublishedYear, string vAuthorName, DateTime vAuthorBirthday, GenderEnum vAuthorGender) {
             this.Title = vTitle;
             this.PublishedYear = vPublishedYear;
             this.Author = new Author(vAuthorName, vAuthorBirthday, vAuthorGender);
