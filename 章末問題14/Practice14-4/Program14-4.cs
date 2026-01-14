@@ -11,10 +11,10 @@ namespace Practice14_4 {
         static void Main(string[] args) {
             var wUrl = @"https://tabelog.com/";
             var wHtmlFilePath = Path.Combine(Directory.GetCurrentDirectory(), "14-4.html");
-            using (var wWebclient = new WebClient()) {
+            using (var wWebClient = new WebClient()) {
                 Console.WriteLine($"HTMLを取得中: {wUrl}");
                 try {
-                    wWebclient.DownloadFile(wUrl, wHtmlFilePath);
+                    wWebClient.DownloadFile(wUrl, wHtmlFilePath);
                     Console.WriteLine($"HTMLを正常に保存しました: {wHtmlFilePath}");
                 } catch (WebException wWebException) {
                     ShowWebErrorMessage(wWebException);

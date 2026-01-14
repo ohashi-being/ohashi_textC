@@ -41,7 +41,7 @@ namespace Practice14_6 {
 
 --- タイムゾーン情報 ---
 日本        : UTC{GetUtcOffsetString(vJapanTimeZone.GetUtcOffset(vJapanTime))}
-シンガポール : UTC{GetUtcOffsetString(vSingaporeTimeZone.GetUtcOffset(vUtcTime))}
+シンガポール : UTC{GetUtcOffsetString(vSingaporeTimeZone.GetUtcOffset(vSingaporeTime))}
 ");
         }
         /// <summary>

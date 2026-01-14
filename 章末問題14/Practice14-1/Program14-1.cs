@@ -57,10 +57,12 @@ namespace Practice14_1 {
                 Console.WriteLine($"実行中: {wInfo.FileName} {wInfo.Arguments}");
                 try {
                     using (var wProcess = Process.Start(wInfo)) wProcess.WaitForExit();
-                } catch (Exception) {
-                    Console.WriteLine($"プロセスの起動に失敗しました: {wInfo.FileName}");
+                } catch (Exception ex) {
+                    Console.WriteLine(
+                        $"プロセスの起動に失敗しました: {wInfo.FileName}{Environment.NewLine}" +
+                        $"例外: {ex.GetType().Name}{Environment.NewLine}" +
+                        $"理由: {ex.Message}");
                 }
-
             }
         }
     }

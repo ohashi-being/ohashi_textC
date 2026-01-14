@@ -14,9 +14,10 @@ namespace Practice14_5 {
     internal class Program {
         static void Main(string[] args) {
             if (args.Length < 2) {
-                Console.WriteLine("使用方法: unziptxt.exe <ZIPファイルパス> <出力先フォルダパス> [拡張子]");
-                Console.WriteLine("例: unziptxt.exe d:\\temp\\sample.zip d:\\work .txt");
-                Console.WriteLine("拡張子を省略した場合は .txt ファイルを抽出します。");
+                Console.WriteLine(
+                    "使用方法: unziptxt.exe <ZIPファイルパス> <出力先フォルダパス> [拡張子]" +
+                    "例: unziptxt.exe d:\\temp\\sample.zip d:\\work .txt" +
+                    "拡張子を省略した場合は .txt ファイルを抽出します。");
                 return;
             }
             string wZipFilePath = args[0];
@@ -58,7 +59,7 @@ namespace Practice14_5 {
             using (var wZipArchive = ZipFile.OpenRead(vZipFilePath)) {
                 foreach (var wEntry in wZipArchive.Entries) {
                     if (IsTargetFile(wEntry, vTargetExtension)) {
-                        ExtractFile(wEntry, vOutputFolder);
+                        wEntry.ExtractToFile(Path.Combine(vOutputFolder, wEntry.Name), overwrite: true);
                         Console.WriteLine($"抽出しました: {wEntry.Name}");
                         wExtractedCount++;
                     }
@@ -79,19 +80,6 @@ namespace Practice14_5 {
         static bool IsTargetFile(ZipArchiveEntry vEntry, string vTargetExtension) {
             return !string.IsNullOrEmpty(vEntry.Name) &&
                    Path.GetExtension(vEntry.Name).Equals(vTargetExtension, StringComparison.OrdinalIgnoreCase);
-        }
-        /// <summary>
-        /// ファイルを抽出する
-        /// </summary>
-        /// <param name="vEntry">ZIPエントリ</param>
-        /// <param name="vOutputFolder">出力先フォルダ</param>
-        static void ExtractFile(ZipArchiveEntry vEntry, string vOutputFolder) {
-            string wOutputPath = Path.Combine(vOutputFolder, vEntry.Name);
-            string wDirectoryPath = Path.GetDirectoryName(wOutputPath);
-            if (!Directory.Exists(wDirectoryPath)) {
-                Directory.CreateDirectory(wDirectoryPath);
-            }
-            vEntry.ExtractToFile(wOutputPath, overwrite: true);
         }
     }
 }
