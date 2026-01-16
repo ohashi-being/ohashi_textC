@@ -29,7 +29,6 @@ namespace Practice13_1 {
             if (!IsModelCompatibleWithDatabase()) {
                 RecreateDatabase();
             }
-            // ResetDatabaseWithIdReset();
             var wAuthorsToRegister = new[] {
                 new Author("夏目漱石", new DateTime(1867, 2, 9), GenderEnum.Male),
                 new Author("太宰治", new DateTime(1909, 6, 19), GenderEnum.Male),
@@ -70,6 +69,7 @@ namespace Practice13_1 {
             Console.WriteLine("\nEnterキーを押して終了してください...");
             Console.ReadKey();
         }
+
         #region 登録メソッド
         /// <summary>
         /// 著者をデータベースに登録する
@@ -134,42 +134,7 @@ namespace Practice13_1 {
         }
         #endregion
 
-        #region 表示メソッド
-        /// <summary>
-        /// 著者の登録結果をコンソールに表示する
-        /// </summary>
-        /// <param name="vAddedAuthors">表示する著者のコレクション</param>
-        static void DisplayAuthors(IEnumerable<Author> vAddedAuthors) {
-            Console.WriteLine("\n--- 著者の登録 ---");
-            var wAuthorList = vAddedAuthors?.ToList();
-            if (wAuthorList == null || !wAuthorList.Any()) {
-                Console.WriteLine("表示する著者データがありません。");
-                return;
-            }
-            foreach (var wAuthor in wAuthorList) {
-                Console.WriteLine($"著者「{wAuthor.Name}」を登録しました。");
-            }
-            Console.WriteLine($"登録完了: {wAuthorList.Count()}件");
-        }
-
-        /// <summary>
-        /// 書籍の登録結果をコンソールに表示する
-        /// </summary>
-        /// <param name="vAddedBooks">表示する書籍のコレクション</param>
-        static void DisplayRegisteredBooks(IEnumerable<Book> vAddedBooks) {
-            Console.WriteLine("\n--- 書籍の登録 ---");
-            var wBookList = vAddedBooks?.ToList();
-            if (wBookList == null || !wBookList.Any()) {
-                Console.WriteLine("表示する書籍データがありません。");
-                return;
-            }
-            foreach (var wBook in wBookList) {
-                Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)を登録しました。");
-            }
-            Console.WriteLine($"登録完了: {wBookList.Count()}件");
-        }
-        #endregion
-
+        #region データ取得メソッド
         /// <summary>
         /// 既存の著者を参照してBookオブジェクトを作成する
         /// </summary>
@@ -185,20 +150,6 @@ namespace Practice13_1 {
                     return null;
                 }
                 return new Book(vTitle, vYear, wAuthor);
-            }
-        }
-
-        /// <summary>
-        /// すべての書籍情報を表示する
-        /// </summary>
-        static void ShowAllBooksInfo() {
-            Console.WriteLine("\n--- 2. すべての書籍情報 ---");
-            using (var wDataBase = new BooksDbContext()) {
-                var wBooks = wDataBase.Books.Include(x => x.Author).ToList();
-                foreach (var wBook in wBooks) {
-                    Console.WriteLine($"ID: {wBook.Id}, {wBook}");
-                }
-                Console.WriteLine($"合計: {wBooks.Count}冊");
             }
         }
 
@@ -239,6 +190,66 @@ namespace Practice13_1 {
         }
 
         /// <summary>
+        /// 誕生日の降順で著者を取得する（書籍も含む）
+        /// </summary>
+        /// <returns>誕生日の遅い順の著者のコレクション</returns>
+        static IEnumerable<Author> GetAuthorsByBirthdayDesc() {
+            using (var wDataBase = new BooksDbContext()) {
+                return wDataBase.Authors.Include(x => x.Books).OrderByDescending(x => x.Birthday).ToList();
+            }
+        }
+        #endregion
+
+        #region 表示メソッド
+        /// <summary>
+        /// 著者の登録結果をコンソールに表示する
+        /// </summary>
+        /// <param name="vAddedAuthors">表示する著者のコレクション</param>
+        static void DisplayAuthors(IEnumerable<Author> vAddedAuthors) {
+            Console.WriteLine("\n--- 著者の登録 ---");
+            var wAuthorList = vAddedAuthors?.ToList();
+            if (wAuthorList == null || !wAuthorList.Any()) {
+                Console.WriteLine("表示する著者データがありません。");
+                return;
+            }
+            foreach (var wAuthor in wAuthorList) {
+                Console.WriteLine($"著者「{wAuthor.Name}」を登録しました。");
+            }
+            Console.WriteLine($"登録完了: {wAuthorList.Count()}件");
+        }
+
+        /// <summary>
+        /// 書籍の登録結果をコンソールに表示する
+        /// </summary>
+        /// <param name="vAddedBooks">表示する書籍のコレクション</param>
+        static void DisplayRegisteredBooks(IEnumerable<Book> vAddedBooks) {
+            Console.WriteLine("\n--- 書籍の登録 ---");
+            var wBookList = vAddedBooks?.ToList();
+            if (wBookList == null || !wBookList.Any()) {
+                Console.WriteLine("表示する書籍データがありません。");
+                return;
+            }
+            foreach (var wBook in wBookList) {
+                Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)を登録しました。");
+            }
+            Console.WriteLine($"登録完了: {wBookList.Count()}件");
+        }
+
+        /// <summary>
+        /// すべての書籍情報を表示する
+        /// </summary>
+        static void ShowAllBooksInfo() {
+            Console.WriteLine("\n--- 2. すべての書籍情報 ---");
+            using (var wDataBase = new BooksDbContext()) {
+                var wBooks = wDataBase.Books.Include(x => x.Author).ToList();
+                foreach (var wBook in wBooks) {
+                    Console.WriteLine($"ID: {wBook.Id}, {wBook}");
+                }
+                Console.WriteLine($"合計: {wBooks.Count}冊");
+            }
+        }
+
+        /// <summary>
         /// 書籍のコレクションを表示する
         /// </summary>
         /// <param name="vBooks">表示する書籍のコレクション</param>
@@ -251,16 +262,6 @@ namespace Practice13_1 {
 
             foreach (var wBook in wBookList) {
                 Console.WriteLine(wBook);
-            }
-        }
-
-        /// <summary>
-        /// 誕生日の降順で著者を取得する（書籍も含む）
-        /// </summary>
-        /// <returns>誕生日の遅い順の著者のコレクション</returns>
-        static IEnumerable<Author> GetAuthorsByBirthdayDesc() {
-            using (var wDataBase = new BooksDbContext()) {
-                return wDataBase.Authors.Include(x => x.Books).OrderByDescending(x => x.Birthday).ToList();
             }
         }
 
@@ -284,7 +285,9 @@ namespace Practice13_1 {
             }
             Console.WriteLine();
         }
-        #region データベースのチェックと再作成
+        #endregion
+
+        #region データベース初期化メソッド
         /// <summary>
         /// データベースとモデルの互換性をチェックする
         /// </summary>
