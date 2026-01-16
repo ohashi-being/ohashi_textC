@@ -15,7 +15,7 @@ using System.Text;
 */
 
 namespace Practice16_2 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
             string wDirectoryPath = @"..\..\16-2";
 
@@ -24,47 +24,61 @@ namespace Practice16_2 {
                 return;
             }
 
-            string[] wKeyword = { "async", "await" };
+            string[] wKeywords = { "async", "await" };
 
-            Console.WriteLine($"検索キーワード: '{wKeyword[0]}' と '{wKeyword[1]}'{Environment.NewLine}");
+            Console.WriteLine($"検索キーワード: '{wKeywords[0]}' と '{wKeywords[1]}'{Environment.NewLine}");
 
             Console.WriteLine("--- 逐次処理 ---");
-            var wSequentialResult = SearchSequential(wDirectoryPath, wKeyword, out long wSequentialTime);
+            var wSequentialResult = SearchFileSequential(wDirectoryPath, wKeywords, out long wSequentialTime);
             DisplayResults(wSequentialResult, wSequentialTime);
 
             Console.WriteLine("--- 並列処理 ---");
-            var wParallelResult = SearchWithPLINQ(wDirectoryPath, wKeyword, out long wParallelTime);
+            var wParallelResult = SearchFileParallel(wDirectoryPath, wKeywords, out long wParallelTime);
             DisplayResults(wParallelResult, wParallelTime);
 
             Console.WriteLine(
-                $"--- 処理完了 ---{Environment.NewLine}" +
+                $"--- 処理完了 ---{Environment.NewLine}{Environment.NewLine}" +
                 $"逐次処理: {wSequentialTime}ms{Environment.NewLine}" +
                 $"並列処理: {wParallelTime}ms{Environment.NewLine}" +
                 $"高速化率: {(double)wParallelTime / wSequentialTime:F2}倍");
         }
 
-        static List<string> SearchSequential(string vDirectoryPath, string[] vKeyword, out long vElapsedMilliseconds) {
-            var wSw = Stopwatch.StartNew();
+        /// <summary>
+        /// 指定したディレクトリ内のC#のソースファイルからキーワードを利用しているファイルを取得する（逐次処理）
+        /// </summary>
+        /// <param name="vDirectoryPath">検索対象のディレクトリパス</param>
+        /// <param name="vKeywords">検索するキーワードの配列</param>
+        /// <param name="vElapsedMilliSeconds">処理にかかった時間</param>
+        /// <returns>キーワードが含まれているファイルのパスのリスト</returns>
+        static List<string> SearchFileSequential(string vDirectoryPath, string[] vKeywords, out long vElapsedMilliSeconds) {
+            var wStopWatch = Stopwatch.StartNew();
             var wResult = new List<string>();
 
             try {
                 var wFiles = Directory.GetFiles(vDirectoryPath, "*.cs", SearchOption.AllDirectories);
 
                 foreach (var wFile in wFiles) {
-                    if (ContainsBothKeywords(wFile, vKeyword)) {
-                        wResult.Add(wFile);
-                    }
+                    if (ContainsBothKeywords(wFile, vKeywords)) wResult.Add(wFile);
                 }
-            } catch (Exception wEx) {
-                Console.WriteLine($"エラー: {wEx.Message}");
+            } catch (Exception ex) {
+                Console.WriteLine(
+                    $"{Environment.NewLine}エラーが発生しました。{Environment.NewLine}" +
+                    $"例外: {ex.GetType().Name}{Environment.NewLine}" +
+                    $"内容: {ex.Message}");
             }
 
-            wSw.Stop();
-            vElapsedMilliseconds = wSw.ElapsedMilliseconds;
+            wStopWatch.Stop();
+            vElapsedMilliSeconds = wStopWatch.ElapsedMilliseconds;
             return wResult;
         }
-
-        static List<string> SearchWithPLINQ(string vDirectoryPath, string[] vKeyword, out long vElapsedMilliseconds) {
+        /// <summary>
+        /// 指定したディレクトリ内のC#のソースファイルからキーワードを利用しているファイルを取得する（並列処理）
+        /// </summary>
+        /// <param name="vDirectoryPath">検索対象のディレクトリパス</param>
+        /// <param name="vKeywords">検索するキーワードの配列</param>
+        /// <param name="vElapsedMilliSeconds">処理にかかった時間</param>
+        /// <returns>キーワードが含まれているファイルのパスのリスト</returns>
+        static List<string> SearchFileParallel(string vDirectoryPath, string[] vKeywords, out long vElapsedMilliSeconds) {
             var wStopWatch = Stopwatch.StartNew();
             var wResult = new List<string>();
 
@@ -73,32 +87,51 @@ namespace Practice16_2 {
 
                 wResult = wFiles
                     .AsParallel()
-                    .Where(wFile => ContainsBothKeywords(wFile, vKeyword))
+                    .Where(wFile => ContainsBothKeywords(wFile, vKeywords))
                     .ToList();
             } catch (Exception ex) {
-                Console.WriteLine($"エラー: {ex.Message}");
+                Console.WriteLine(
+                    $"{Environment.NewLine}エラーが発生しました。{Environment.NewLine}" +
+                    $"例外: {ex.GetType().Name}{Environment.NewLine}" +
+                    $"内容: {ex.Message}");
             }
 
             wStopWatch.Stop();
-            vElapsedMilliseconds = wStopWatch.ElapsedMilliseconds;
+            vElapsedMilliSeconds = wStopWatch.ElapsedMilliseconds;
             return wResult;
         }
 
-        static void DisplayResults(List<string> vFiles, long vElapsedMilliseconds) {
+        /// <summary>
+        /// 検索結果をコンソールに表示する
+        /// </summary>
+        /// <param name="vFiles">検出されたファイルパスのリスト</param>
+        /// <param name="vElapsedMilliSeconds">処理にかかった時間</param>
+        static void DisplayResults(List<string> vFiles, long vElapsedMilliSeconds) {
+            if (vFiles.Count == 0) {
+                Console.WriteLine($"{Environment.NewLine}該当するファイルはありません。{Environment.NewLine}");
+                return;
+            }
+            Console.WriteLine($"{Environment.NewLine}ファイルパス:");
             foreach (var wFile in vFiles) {
                 Console.WriteLine(wFile);
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"検出ファイル数: {vFiles.Count}");
-            Console.WriteLine($"実行時間: {vElapsedMilliseconds}ms ({vElapsedMilliseconds / 1000.0:F3}秒)");
+            Console.WriteLine($"{Environment.NewLine}検出ファイル数: {vFiles.Count}");
+            Console.WriteLine($"実行時間: {vElapsedMilliSeconds}ms ({vElapsedMilliSeconds / 1000.0:F3}秒){Environment.NewLine}");
         }
 
-        static bool ContainsBothKeywords(string vFilePath, string[] vKeyword) {
+        /// <summary>
+        /// ファイル内にすべてのキーワードが含まれているかどうかを確認する
+        /// </summary>
+        /// <param name="vFilePath">検索対象のファイルパス</param>
+        /// <param name="vKeywords">検索するキーワードの配列/param>
+        /// <returns>すべてのキーワードが含まれているかどうか</returns>
+        static bool ContainsBothKeywords(string vFilePath, string[] vKeywords) {
             try {
                 string wContent = File.ReadAllText(vFilePath, Encoding.UTF8);
-                return wContent.Contains(vKeyword[0]) && wContent.Contains(vKeyword[1]);
-            } catch {
+                return wContent.Contains(vKeywords[0]) && wContent.Contains(vKeywords[1]);
+            } catch (Exception ex) {
+                Console.WriteLine($"警告: ファイル読み込みエラー ({Path.GetFileName(vFilePath)}): {ex.Message}");
                 return false;
             }
         }

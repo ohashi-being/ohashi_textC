@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,40 +12,45 @@ using System.Threading.Tasks;
 */
 
 namespace Practice16_1 {
-    internal class Program {
-        static void Main(string[] args) {
-            var program = new Program();
-            program.RunAsync().Wait();
+    class Program {
+        static async Task Main(string[] args) {
+            var wFilePath = @"..\..\16-1.txt";
+
+            if (!File.Exists(wFilePath)) {
+                Console.WriteLine("指定されたファイルが存在しません。");
+                return;
+            }
+
+            try {
+                var wContent = await GetFileAsync(wFilePath);
+                Console.WriteLine("=== ファイルの内容 ===");
+                Console.WriteLine(wContent);
+            } catch (Exception ex) {
+                Console.WriteLine(
+                    $"エラーが発生しました{Environment.NewLine}" +
+                    $"内容：{ex.Message}");
+            }
 
             Console.WriteLine("処理が完了しました。何かキーを押してください...");
             Console.ReadKey();
         }
 
-        private async Task RunAsync() {
-            var filePath = @"..\..\16-1.txt";
+        /// <summary>
+        /// 指定のファイルの内容を取得する
+        /// </summary>
+        /// <param name="vFilePath">ファイルパス</param>
+        /// <returns>ファイルの内容を含む文字列</returns>
+        static async Task<string> GetFileAsync(string vFilePath) {
+            var wStringBuilder = new StringBuilder();
 
-            try {
-                var content = await ReadFileAsync(filePath);
-                Console.WriteLine("=== ファイルの内容 ===");
-                Console.WriteLine(content);
-            } catch (FileNotFoundException) {
-                Console.WriteLine($"ファイルが見つかりません: {filePath}");
-            } catch (Exception ex) {
-                Console.WriteLine($"エラーが発生しました: {ex.Message}");
-            }
-        }
-
-        private async Task<string> ReadFileAsync(string filePath) {
-            var sb = new StringBuilder();
-
-            using (var reader = new StreamReader(filePath, Encoding.UTF8)) {
-                string line;
-                while ((line = await reader.ReadLineAsync()) != null) {
-                    sb.AppendLine(line);
+            using (var wReader = new StreamReader(vFilePath, Encoding.UTF8)) {
+                string wLine;
+                while ((wLine = await wReader.ReadLineAsync()) != null) {
+                    wStringBuilder.AppendLine(wLine);
                 }
             }
 
-            return sb.ToString();
+            return wStringBuilder.ToString();
         }
     }
 }
