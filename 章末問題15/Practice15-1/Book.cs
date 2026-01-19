@@ -1,4 +1,7 @@
 ﻿namespace Practice15_1 {
+    /// <summary>
+    /// 書籍情報を表すクラス
+    /// </summary>
     public class Book {
         /// <summary>
         /// タイトル

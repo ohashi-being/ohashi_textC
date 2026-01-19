@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 
 namespace Practice15_1 {
+    /// <summary>
+    /// 書籍とカテゴリーのデータを保持するクラス
+    /// </summary>
     public static class Library {
         public static IEnumerable<Category> Categories { get; private set; }
         public static IEnumerable<Book> Books { get; private set; }

@@ -1,4 +1,7 @@
 ﻿namespace Practice15_1 {
+    /// <summary>
+    /// 書籍のカテゴリーを表すクラス
+    /// </summary>
     public class Category {
         /// <summary>
         /// ID
