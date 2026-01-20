@@ -26,133 +26,171 @@ using Practice13_1.Models;
 namespace Practice13_1 {
     class Program {
         static void Main(string[] args) {
-            if (!IsModelCompatibleWithDatabase()) {
-                RecreateDatabase();
+            if (!IsModelCompatibleWithDatabase()) RecreateDatabase();
+            ResetDatabaseWithIdReset();
+
+            using (var wDataBase = new BooksDbContext()) {
+                var wAuthorsToRegister = new[] {
+                    new Author("夏目漱石", new DateTime(1867, 2, 9), GenderEnum.Male),
+                    new Author("太宰治", new DateTime(1909, 6, 19), GenderEnum.Male),
+                    new Author("与謝野晶子", new DateTime(1878, 12, 7), GenderEnum.Female),
+                    new Author("宮沢賢治", new DateTime(1896, 8, 27), GenderEnum.Male),
+                    new Author("川端康成", new DateTime(1899, 6, 14), GenderEnum.Male),
+                    new Author("菊池寛", new DateTime(1888, 12, 26), GenderEnum.Male)};
+
+                RegisterAuthors(wDataBase, wAuthorsToRegister);
+                DisplayRegisteredAuthors(wAuthorsToRegister);
+
+                var wBooksToRegister = new[] {
+                    new Book("坊ちゃん", 2003, wAuthorsToRegister[0]),
+                    new Book("人間失格", 1990, wAuthorsToRegister[1]),
+                    new Book("みだれ髪", 1901, wAuthorsToRegister[2]),
+                    new Book("銀河鉄道の夜", 1927, wAuthorsToRegister[3]),
+                    new Book("こころ", 1991, wAuthorsToRegister[0]),
+                    new Book("伊豆の踊子", 2003, wAuthorsToRegister[4]),
+                    new Book("真珠夫人", 2002, wAuthorsToRegister[5]),
+                    new Book("注文の多い料理店", 2000, wAuthorsToRegister[3])};
+
+                RegisterBooks(wDataBase, wBooksToRegister);
+                DisplayRegisteredBooks(wBooksToRegister);
             }
-            var wAuthorsToRegister = new[] {
-                new Author("夏目漱石", new DateTime(1867, 2, 9), GenderEnum.Male),
-                new Author("太宰治", new DateTime(1909, 6, 19), GenderEnum.Male),
-                new Author("与謝野晶子", new DateTime(1878, 12, 7), GenderEnum.Female),
-                new Author("宮沢賢治", new DateTime(1896, 8, 27), GenderEnum.Male),
-                new Author("川端康成", new DateTime(1899, 6, 14), GenderEnum.Male),
-                new Author("菊池寛", new DateTime(1888, 12, 26), GenderEnum.Male)
-            };
-            var wAddedAuthors = RegisterAuthors(wAuthorsToRegister);
-            DisplayAuthors(wAddedAuthors);
-
-            Console.WriteLine($"\n{new string('=', 50)}");
-
-            var wInitialBooksToRegister = new[] {
-                CreateBookWithExistingAuthor("坊ちゃん", 2003, "夏目漱石"),
-                CreateBookWithExistingAuthor("人間失格", 1990, "太宰治"),
-                CreateBookWithExistingAuthor("みだれ髪", 1901, "与謝野晶子"),
-                CreateBookWithExistingAuthor("銀河鉄道の夜", 1927, "宮沢賢治")
-            };
-            var wAddedInitialBooks = RegisterBooks(wInitialBooksToRegister);
-            DisplayRegisteredBooks(wAddedInitialBooks);
-
-            Console.WriteLine($"\n{new string('=', 50)}");
-
-            var wNewBooksToRegister = new[] {
-                CreateBookWithExistingAuthor("こころ", 1991, "夏目漱石"),
-                CreateBookWithExistingAuthor("伊豆の踊子", 2003, "川端康成"),
-                CreateBookWithExistingAuthor("真珠夫人", 2002, "菊池寛"),
-                CreateBookWithExistingAuthor("注文の多い料理店", 2000, "宮沢賢治")
-            };
-            var wAddedNewBooks = RegisterBooks(wNewBooksToRegister);
-            DisplayRegisteredBooks(wAddedNewBooks);
 
             ShowAllBooksInfo();
             DisplayBooks(GetLongestTitleBooks());
             DisplayBooks(GetOldestBooks(3));
             ShowAuthorsByBooks(GetAuthorsByBirthdayDesc());
+
             Console.WriteLine("\nEnterキーを押して終了してください...");
             Console.ReadKey();
         }
 
-        #region 登録メソッド
+        #region データベース初期化
+        /// <summary>
+        /// データベースとモデルの互換性をチェックする
+        /// </summary>
+        /// <returns>互換性があるかどうか</returns>
+        static bool IsModelCompatibleWithDatabase() {
+            using (var wDataBase = new BooksDbContext()) {
+                try {
+                    if (!wDataBase.Database.Exists()) {
+                        Console.WriteLine("データベースが存在しません。");
+                        return false;
+                    }
+
+                    bool wIsCompatible = wDataBase.Database.CompatibleWithModel(throwIfNoMetadata: false);
+
+                    if (wIsCompatible) {
+                        Console.WriteLine("データベーススキーマは互換性があります。");
+                    } else {
+                        Console.WriteLine("データベーススキーマがモデルと互換性がありません。");
+                    }
+
+                    return wIsCompatible;
+                } catch (Exception ex) {
+                    Console.WriteLine($"互換性チェック中にエラーが発生しました: {ex.Message}");
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// データベースを再作成する
+        /// </summary>
+        static void RecreateDatabase() {
+            using (var wDataBase = new BooksDbContext()) {
+                try {
+                    if (wDataBase.Database.Exists()) {
+                        Console.WriteLine("既存のデータベースを削除しています...");
+                        wDataBase.Database.Delete();
+                    }
+
+                    Console.WriteLine("データベースを作成しています...");
+                    wDataBase.Database.Create();
+                    Console.WriteLine("データベースの作成が完了しました。");
+                } catch (Exception ex) {
+                    Console.WriteLine($"データベースの再作成中にエラーが発生しました: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// データをリセットする（IDもリセット）
+        /// </summary>
+        static void ResetDatabaseWithIdReset() {
+            using (var wDataBase = new BooksDbContext()) {
+                wDataBase.Books.RemoveRange(wDataBase.Books);
+                wDataBase.Authors.RemoveRange(wDataBase.Authors);
+                wDataBase.SaveChanges();
+                wDataBase.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Books', RESEED, 0)");
+                wDataBase.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Authors', RESEED, 0)");
+                Console.WriteLine("データベースをリセットしました。次のIDは1から始まります。");
+            }
+        }
+        #endregion
+
+        #region データ登録
         /// <summary>
         /// 著者をデータベースに登録する
         /// </summary>
+        /// <param name="vDataBase">データベースコンテキスト</param>
         /// <param name="vAuthors">登録する著者のコレクション</param>
-        /// <returns>登録された著者のコレクション</returns>
-        static IEnumerable<Author> RegisterAuthors(IEnumerable<Author> vAuthors) {
-            using (var wDataBase = new BooksDbContext()) {
-                var wAddedAuthors = new List<Author>();
-                foreach (var wAuthor in vAuthors) {
-                    if (wAuthor == null || string.IsNullOrWhiteSpace(wAuthor.Name)) {
-                        Console.WriteLine("無効な著者データがあります。");
-                        continue;
-                    }
-                    if (wDataBase.Authors.FirstOrDefault(x => x.Name == wAuthor.Name) != null &&
-                        !wAddedAuthors.Any(x => x.Name == wAuthor.Name)) {
-                        Console.WriteLine($"著者「{wAuthor.Name}」は既にデータベースに存在します。");
-                        continue;
-                    }
-                    wDataBase.Authors.Add(wAuthor);
-                    wAddedAuthors.Add(wAuthor);
-                }
-                wDataBase.SaveChanges();
-                return wAddedAuthors;
+        static void RegisterAuthors(BooksDbContext vDataBase, IEnumerable<Author> vAuthors) {
+            if (vAuthors == null) {
+                Console.WriteLine("登録する著者データがありません。");
+                return;
             }
+
+            foreach (var wAuthor in vAuthors) {
+                if (wAuthor == null || string.IsNullOrWhiteSpace(wAuthor.Name)) {
+                    Console.WriteLine("無効な著者データがあります。");
+                    continue;
+                }
+                if (IsAuthorExists(vDataBase, wAuthor)) {
+                    Console.WriteLine($"著者「{wAuthor.Name}」は既に登録されています。");
+                    continue;
+                }
+
+                vDataBase.Authors.Add(wAuthor);
+            }
+
+            vDataBase.SaveChanges();
         }
 
         /// <summary>
         /// 書籍をデータベースに登録する
         /// </summary>
+        /// <param name="vDataBase">データベースコンテキスト</param>
         /// <param name="vBooks">登録する書籍のコレクション</param>
-        /// <returns>登録された書籍のコレクション</returns>
-        static IEnumerable<Book> RegisterBooks(IEnumerable<Book> vBooks) {
-            using (var wDataBase = new BooksDbContext()) {
-                var wAddedBooks = new List<Book>();
-                foreach (var wBook in vBooks) {
-                    if (wBook == null || string.IsNullOrWhiteSpace(wBook.Title)) {
-                        Console.WriteLine($"書籍データが無効です。{wBook}");
-                        continue;
-                    }
-                    if (wBook.Author == null) {
-                        Console.WriteLine($"書籍「{wBook.Title}」の著者情報が無効です。");
-                        continue;
-                    }
-                    var wExistingAuthor = wDataBase.Authors.FirstOrDefault(x => x.Id == wBook.Author.Id);
-                    if (wExistingAuthor != null) {
-                        wBook.Author = wExistingAuthor;
-                    } else {
-                        wDataBase.Authors.Attach(wBook.Author);
-                    }
-                    var wExistingBook = wDataBase.Books.FirstOrDefault(x => x.Title == wBook.Title && x.Author.Id == wBook.Author.Id);
-                    if (wExistingBook != null) {
-                        Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)は既にデータベースに存在します。");
-                        continue;
-                    }
-                    wDataBase.Books.Add(wBook);
-                    wAddedBooks.Add(wBook);
-                }
-                wDataBase.SaveChanges();
-                return wAddedBooks;
+        static void RegisterBooks(BooksDbContext vDataBase, IEnumerable<Book> vBooks) {
+            if (vBooks == null) {
+                Console.WriteLine("登録する書籍データがありません。");
+                return;
             }
+
+            foreach (var wBook in vBooks) {
+                if (wBook == null || string.IsNullOrWhiteSpace(wBook.Title)) {
+                    Console.WriteLine("無効な書籍データがあります。");
+                    continue;
+                }
+
+                if (wBook.Author == null) {
+                    Console.WriteLine($"書籍「{wBook.Title}」の著者情報が無効です。");
+                    continue;
+                }
+                if (IsBookExists(vDataBase, wBook)) {
+                    Console.WriteLine($"書籍「{wBook.Title}」は既に登録されています。");
+                    continue;
+                }
+
+                vDataBase.Books.Add(wBook);
+            }
+
+            vDataBase.SaveChanges();
         }
         #endregion
 
-        #region データ取得メソッド
-        /// <summary>
-        /// 既存の著者を参照してBookオブジェクトを作成する
-        /// </summary>
-        /// <param name="vTitle">書籍タイトル</param>
-        /// <param name="vYear">出版年</param>
-        /// <param name="vAuthorName">著者名</param>
-        /// <returns>作成されたBookオブジェクト</returns>
-        static Book CreateBookWithExistingAuthor(string vTitle, int vYear, string vAuthorName) {
-            using (var wDataBase = new BooksDbContext()) {
-                var wAuthor = wDataBase.Authors.FirstOrDefault(x => x.Name == vAuthorName);
-                if (wAuthor == null) {
-                    Console.WriteLine($"著者「{vAuthorName}」が見つかりません。書籍「{vTitle}」をスキップします。");
-                    return null;
-                }
-                return new Book(vTitle, vYear, wAuthor);
-            }
-        }
-
+        #region データ取得
         /// <summary>
         /// タイトルが最も長い書籍を取得する
         /// </summary>
@@ -200,39 +238,49 @@ namespace Practice13_1 {
         }
         #endregion
 
-        #region 表示メソッド
+        #region データ表示
         /// <summary>
-        /// 著者の登録結果をコンソールに表示する
+        /// 著者の登録結果を表示する
         /// </summary>
-        /// <param name="vAddedAuthors">表示する著者のコレクション</param>
-        static void DisplayAuthors(IEnumerable<Author> vAddedAuthors) {
-            Console.WriteLine("\n--- 著者の登録 ---");
-            var wAuthorList = vAddedAuthors?.ToList();
-            if (wAuthorList == null || !wAuthorList.Any()) {
-                Console.WriteLine("表示する著者データがありません。");
+        /// <param name="vTypeName">データの種類名</param>
+        /// <param name="vAuthors">登録した著者のコレクション</param>
+        static void DisplayRegisteredAuthors(IEnumerable<Author> vAuthors) {
+            Console.WriteLine($"{Environment.NewLine}---著者の登録 ---");
+
+            var wAuthorList = vAuthors.ToList();
+
+            if (!wAuthorList.Any()) {
+                Console.WriteLine("表示するデータがありません。");
                 return;
             }
+
             foreach (var wAuthor in wAuthorList) {
                 Console.WriteLine($"著者「{wAuthor.Name}」を登録しました。");
             }
-            Console.WriteLine($"登録完了: {wAuthorList.Count()}件");
+
+            Console.WriteLine($"登録完了: {wAuthorList.Count}件");
         }
 
         /// <summary>
-        /// 書籍の登録結果をコンソールに表示する
+        /// 書籍の登録結果を表示する
         /// </summary>
-        /// <param name="vAddedBooks">表示する書籍のコレクション</param>
-        static void DisplayRegisteredBooks(IEnumerable<Book> vAddedBooks) {
-            Console.WriteLine("\n--- 書籍の登録 ---");
-            var wBookList = vAddedBooks?.ToList();
-            if (wBookList == null || !wBookList.Any()) {
-                Console.WriteLine("表示する書籍データがありません。");
+        /// <param name="vTypeName">データの種類名</param>
+        /// <param name="vBooks">登録した書籍のコレクション</param>
+        static void DisplayRegisteredBooks(IEnumerable<Book> vBooks) {
+            Console.WriteLine($"{Environment.NewLine}--- 書籍の登録 ---");
+
+            var wBookList = vBooks.ToList();
+
+            if (!wBookList.Any()) {
+                Console.WriteLine("表示するデータがありません。");
                 return;
             }
+
             foreach (var wBook in wBookList) {
                 Console.WriteLine($"書籍「{wBook.Title}」({wBook.Author.Name}著)を登録しました。");
             }
-            Console.WriteLine($"登録完了: {wBookList.Count()}件");
+
+            Console.WriteLine($"登録完了: {wBookList.Count}件");
         }
 
         /// <summary>
@@ -287,69 +335,34 @@ namespace Practice13_1 {
         }
         #endregion
 
-        #region データベース初期化メソッド
+        #region 存在チェック
         /// <summary>
-        /// データベースとモデルの互換性をチェックする
+        /// 著者が既にデータベースに存在するかチェックする
         /// </summary>
-        /// <returns>互換性があるかどうか</returns>
-        static bool IsModelCompatibleWithDatabase() {
-            using (var wDataBase = new BooksDbContext()) {
-                try {
-                    if (!wDataBase.Database.Exists()) {
-                        Console.WriteLine("データベースが存在しません。");
-                        return false;
-                    }
-
-                    bool wIsCompatible = wDataBase.Database.CompatibleWithModel(throwIfNoMetadata: false);
-
-                    if (wIsCompatible) {
-                        Console.WriteLine("データベーススキーマは互換性があります。");
-                    } else {
-                        Console.WriteLine("データベーススキーマがモデルと互換性がありません。");
-                    }
-
-                    return wIsCompatible;
-                } catch (Exception ex) {
-                    Console.WriteLine($"互換性チェック中にエラーが発生しました: {ex.Message}");
-                    return false;
-                }
+        /// <param name="vDataBase">データベースコンテキスト</param>
+        /// <param name="vAuthor">チェックする著者</param>
+        /// <returns>存在する場合はtrue</returns>
+        static bool IsAuthorExists(BooksDbContext vDataBase, Author vAuthor) {
+            if (vAuthor == null || string.IsNullOrWhiteSpace(vAuthor.Name)) {
+                return false;
             }
+            return vDataBase.Authors.Any(x => x.Name == vAuthor.Name);
         }
 
         /// <summary>
-        /// データベースを再作成する
+        /// 書籍が既にデータベースに存在するかチェックする
         /// </summary>
-        static void RecreateDatabase() {
-            using (var wDataBase = new BooksDbContext()) {
-                try {
-                    if (wDataBase.Database.Exists()) {
-                        Console.WriteLine("既存のデータベースを削除しています...");
-                        wDataBase.Database.Delete();
-                    }
-
-                    Console.WriteLine("データベースを作成しています...");
-                    wDataBase.Database.Create();
-                    Console.WriteLine("データベースの作成が完了しました。");
-                } catch (Exception ex) {
-                    Console.WriteLine($"データベースの再作成中にエラーが発生しました: {ex.Message}");
-                    throw;
-                }
+        /// <param name="vDataBase">データベースコンテキスト</param>
+        /// <param name="vBook">チェックする書籍</param>
+        /// <returns>存在する場合はtrue</returns>
+        static bool IsBookExists(BooksDbContext vDataBase, Book vBook) {
+            if (vBook == null || string.IsNullOrWhiteSpace(vBook.Title)) {
+                return false;
             }
-        }
-
-        // 削除用に保管しています
-        /// <summary>
-        /// データをリセットする（IDもリセット）
-        /// </summary>
-        static void ResetDatabaseWithIdReset() {
-            using (var wDataBase = new BooksDbContext()) {
-                wDataBase.Books.RemoveRange(wDataBase.Books);
-                wDataBase.Authors.RemoveRange(wDataBase.Authors);
-                wDataBase.SaveChanges();
-                wDataBase.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Books', RESEED, 0)");
-                wDataBase.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Authors', RESEED, 0)");
-                Console.WriteLine("データベースをリセットしました。次のIDは1から始まります。");
+            if (vBook.Author == null) {
+                return false;
             }
+            return vDataBase.Books.Any(x => x.Title == vBook.Title && x.Author.Id == vBook.Author.Id);
         }
         #endregion
     }
