@@ -194,7 +194,7 @@ namespace Practice13_1 {
         /// <summary>
         /// タイトルが最も長い書籍を取得する
         /// </summary>
-        /// <returnsタイトルが最も長い書籍のコレクション</returns>
+        /// <returns>タイトルが最も長い書籍のコレクション</returns>
         static IEnumerable<Book> GetLongestTitleBooks() {
             Console.WriteLine("\n--- 3. タイトルが最も長い書籍 ---");
             using (var wDataBase = new BooksDbContext()) {
@@ -242,7 +242,6 @@ namespace Practice13_1 {
         /// <summary>
         /// 著者の登録結果を表示する
         /// </summary>
-        /// <param name="vTypeName">データの種類名</param>
         /// <param name="vAuthors">登録した著者のコレクション</param>
         static void DisplayRegisteredAuthors(IEnumerable<Author> vAuthors) {
             Console.WriteLine($"{Environment.NewLine}---著者の登録 ---");
@@ -264,7 +263,6 @@ namespace Practice13_1 {
         /// <summary>
         /// 書籍の登録結果を表示する
         /// </summary>
-        /// <param name="vTypeName">データの種類名</param>
         /// <param name="vBooks">登録した書籍のコレクション</param>
         static void DisplayRegisteredBooks(IEnumerable<Book> vBooks) {
             Console.WriteLine($"{Environment.NewLine}--- 書籍の登録 ---");
@@ -317,7 +315,6 @@ namespace Practice13_1 {
         /// 著者のコレクションを著者別書籍形式で表示する
         /// </summary>
         /// <param name="vAuthors">表示する著者のコレクション</param>
-        /// <param name="vTitle">表示セクションのタイトル</param>
         static void ShowAuthorsByBooks(IEnumerable<Author> vAuthors) {
             Console.WriteLine($"\n--- 5. 著者別書籍表示（誕生日の遅い順） ---");
             if (vAuthors == null || !vAuthors.Any()) {
