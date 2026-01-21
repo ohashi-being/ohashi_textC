@@ -15,9 +15,10 @@ namespace Practice14_5 {
         static void Main(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine(
-                    "使用方法: unziptxt.exe <ZIPファイルパス> <出力先フォルダパス> [拡張子]" +
-                    "例: unziptxt.exe d:\\temp\\sample.zip d:\\work .txt" +
-                    "拡張子を省略した場合は .txt ファイルを抽出します。");
+                    $"引数を入力してください{Environment.NewLine}{Environment.NewLine}" +
+                    $"使用方法: unziptxt.exe <ZIPファイルパス> <出力先フォルダパス> [拡張子]{Environment.NewLine}" +
+                    $"例: unziptxt.exe d:\\temp\\sample.zip d:\\work .txt{Environment.NewLine}" +
+                    $"拡張子を省略した場合は .txt ファイルを抽出します。");
                 return;
             }
             string wZipFilePath = args[0];

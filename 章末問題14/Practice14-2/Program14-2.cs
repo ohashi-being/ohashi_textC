@@ -21,7 +21,7 @@ namespace Practice14_2 {
             
             if (!string.IsNullOrEmpty(wAssembly.Location)) {
                 var wFileVersionInfo = FileVersionInfo.GetVersionInfo(wAssembly.Location);
-                Console.WriteLine($"{"File Version".PadRight(wLabelWidth)} : {wFileVersionInfo?.FileVersion ?? "不明"}");
+                Console.WriteLine($"{"File Version".PadRight(wLabelWidth)} : {wFileVersionInfo.FileVersion ?? "不明"}");
             } else {
                 Console.WriteLine($"{"File Version".PadRight(wLabelWidth)} : 取得不可");
             }

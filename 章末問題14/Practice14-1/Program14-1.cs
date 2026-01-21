@@ -59,7 +59,7 @@ namespace Practice14_1 {
                     using (var wProcess = Process.Start(wInfo)) wProcess.WaitForExit();
                 } catch (Exception ex) {
                     Console.WriteLine(
-                        $"プロセスの起動に失敗しました: {wInfo.FileName}{Environment.NewLine}" +
+                        $"プロセスの起動に失敗しました: {wLine}{Environment.NewLine}" +
                         $"例外: {ex.GetType().Name}{Environment.NewLine}" +
                         $"理由: {ex.Message}");
                 }
