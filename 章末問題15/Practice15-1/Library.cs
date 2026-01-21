@@ -5,14 +5,20 @@ namespace Practice15_1 {
     /// 書籍とカテゴリーのデータを保持するクラス
     /// </summary>
     public static class Library {
-        public static IEnumerable<Category> Categories { get; private set; }
-        public static IEnumerable<Book> Books { get; private set; }
+        /// <summary>
+        /// カテゴリのコレクション
+        /// </summary>
+        public static IReadOnlyList<Category> Categories { get; }
+        /// <summary>
+        /// 書籍のコレクション
+        /// </summary>
+        public static IReadOnlyList<Book> Books { get; }
         /// <summary>
         /// コンストラクタ
         /// </summary>
         static Library() {
             Categories = new List<Category> {
-                new Category (1,"Development"),
+                new Category (1, "Development"),
                 new Category (2, "Server"),
                 new Category (3, "Web Design"),
                 new Category (4, "Windows"),

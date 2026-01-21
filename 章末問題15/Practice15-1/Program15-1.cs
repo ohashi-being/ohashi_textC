@@ -44,7 +44,8 @@ namespace Practice15_1 {
 
             // 解答2
             Console.WriteLine("----------- 解答2 -----------");
-            var wMostExpensiveBook = wBooks
+            var wMaxPrice = wBooks.Max(x => x.Price);
+            var wMostExpensiveBooks = wBooks
                 .Join(wCategories,
                       x => x.CategoryId,
                       x => x.Id,
@@ -55,20 +56,20 @@ namespace Practice15_1 {
                           Price = x.Price,
                           PublishedYear = x.PublishedYear
                       })
-                .OrderByDescending(x => x.Price)
-                .FirstOrDefault();
-
-            Console.WriteLine($"発行年:{wMostExpensiveBook.PublishedYear}, カテゴリ:{wMostExpensiveBook.CategoryName}({wMostExpensiveBook.CategoryID}), 価格:{wMostExpensiveBook.Price}, タイトル:{wMostExpensiveBook.Title}");
+                .Where(x => x.Price == wMaxPrice)
+                .OrderBy(x => x.Title);
+            foreach (var wBook in wMostExpensiveBooks)
+                Console.WriteLine($"発行年:{wBook.PublishedYear}, カテゴリ:{wBook.CategoryName}, 価格:{wBook.Price}, タイトル:{wBook.Title}");
             // 解答3
-            Console.WriteLine("\n----------- 解答3 -----------");
+            Console.WriteLine($"{Environment.NewLine}----------- 解答3 -----------");
             var wBookCountByYear = wBooks.GroupBy(x => x.PublishedYear)
-                                                .OrderBy(x => x.Key)
-                                                .Select(x => new { Year = x.Key, Count = x.Count() });
+                                         .OrderBy(x => x.Key)
+                                         .Select(x => new { Year = x.Key, Count = x.Count() });
             foreach (var wYear in wBookCountByYear) {
                 Console.WriteLine($"発行年:{wYear.Year}, 冊数:{wYear.Count}");
             }
             // 解答4
-            Console.WriteLine("\n----------- 解答4 -----------");
+            Console.WriteLine($"{Environment.NewLine}----------- 解答4 -----------");
             var wSortedBooks = wBooks.Join(wCategories,
                                        x => x.CategoryId,
                                        x => x.Id,
@@ -84,8 +85,8 @@ namespace Practice15_1 {
                 Console.WriteLine($"{wSortedBook.PublishedYear}年 {wSortedBook.Price}円 {wSortedBook.Title}({wSortedBook.CategoryName})");
             }
             // 解答5
-            Console.WriteLine("\n----------- 解答5 -----------");
-            var wTargetYear = 2016;
+            Console.WriteLine($"{Environment.NewLine}----------- 解答5 -----------");
+            int wTargetYear = 2016;
             var wCategoriesByYear = GetCategoriesByYear(wTargetYear);
             if (wCategoriesByYear.Any()) {
                 foreach (var wCategoryByYear in wCategoriesByYear) {
@@ -95,7 +96,7 @@ namespace Practice15_1 {
                 Console.WriteLine($"{wTargetYear}年に発行された書籍のカテゴリは存在しません。");
             }
             // 解答6
-            Console.WriteLine("\n----------- 解答6 -----------");
+            Console.WriteLine($"{Environment.NewLine}----------- 解答6 -----------");
             var wGroupedBooksByCategory = wBooks.GroupBy(x => x.CategoryId)
                         .Join(wCategories,
                               x => x.Key,
@@ -113,7 +114,7 @@ namespace Practice15_1 {
                 }
             }
             // 解答7
-            Console.WriteLine("\n----------- 解答7 -----------");
+            Console.WriteLine($"{Environment.NewLine}----------- 解答7 -----------");
             var wTargetCategoryName = "Development";
             var wTargetCategory = wCategories.FirstOrDefault(y => y.Name == wTargetCategoryName);
             if (wTargetCategory != null) {
@@ -131,9 +132,9 @@ namespace Practice15_1 {
                 Console.WriteLine($"カテゴリ'{wTargetCategoryName}'は存在しません。");
             }
             // 解答8
-            Console.WriteLine("\n----------- 解答8 -----------");
+            Console.WriteLine($"{Environment.NewLine}----------- 解答8 -----------");
             var wMinBookCount = 4;
-            var wCategoriesWithBooks = wCategories.GroupJoin(Library.Books,
+            var wCategoriesWithBooks = wCategories.GroupJoin(wBooks,
                                     x => x.Id,
                                     x => x.CategoryId,
                                     (x, y) => new {
@@ -155,10 +156,10 @@ namespace Practice15_1 {
         }
         // 解答5
         /// <summary>
-        /// 対象年度に発行された書籍のカテゴリ一覧を取得する
+        /// 対象年に発行された書籍のカテゴリ一覧を取得する
         /// </summary>
-        /// <param name="vYear">対象年度</param>
-        /// <returns>対象年度に発行された書籍のカテゴリ一覧</returns>
+        /// <param name="vYear">対象年</param>
+        /// <returns>対象年に発行された書籍のカテゴリ一覧</returns>
         static List<string> GetCategoriesByYear(int vYear) {
             var wCategories = Library.Books.Where(x => x.PublishedYear == vYear)
                          .Join(Library.Categories,

@@ -6,11 +6,11 @@
         /// <summary>
         /// ID
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; }
         /// <summary>
         /// カテゴリー名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -20,6 +20,10 @@
             this.Id = vId;
             this.Name = vName;
         }
+        /// <summary>
+        /// カテゴリ情報を文字列形式で返す
+        /// </summary>
+        /// <returns>IDとカテゴリ名を含む文字列</returns>
         public override string ToString() {
             return $"Id:{this.Id}, カテゴリ名:{this.Name}";
         }
