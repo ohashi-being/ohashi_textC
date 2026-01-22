@@ -44,6 +44,7 @@ namespace Practice15_1 {
                 new Book ("まるわかりMicrosoft Office入門", 5, 1890, 2015),
                 new Book ("Word・Excel実践テンプレート集", 5, 2600, 2016),
                 new Book ("たのしく学ぶExcel初級編", 5, 2800, 2015),
+                new Book ("この本も最高値じゃない？", 5, 4800, 2026),
             };
         }
     }

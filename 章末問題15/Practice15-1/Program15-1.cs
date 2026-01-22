@@ -46,17 +46,16 @@ namespace Practice15_1 {
             Console.WriteLine("----------- 解答2 -----------");
             var wMaxPrice = wBooks.Max(x => x.Price);
             var wMostExpensiveBooks = wBooks
+                .Where(x => x.Price == wMaxPrice)
                 .Join(wCategories,
                       x => x.CategoryId,
                       x => x.Id,
                       (x, y) => new {
                           Title = x.Title,
-                          CategoryID = x.CategoryId,
                           CategoryName = y.Name,
                           Price = x.Price,
                           PublishedYear = x.PublishedYear
                       })
-                .Where(x => x.Price == wMaxPrice)
                 .OrderBy(x => x.Title);
             foreach (var wBook in wMostExpensiveBooks)
                 Console.WriteLine($"発行年:{wBook.PublishedYear}, カテゴリ:{wBook.CategoryName}, 価格:{wBook.Price}, タイトル:{wBook.Title}");
