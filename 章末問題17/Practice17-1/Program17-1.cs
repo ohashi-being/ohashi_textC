@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using TextFileProcessor;
 
 namespace Practice17_1 {
-    internal class Program {
+    class Program {
         static void Main(string[] args) {
-            TextProcessor.Run<LineCounterProcessor>("TestData.txt");
+            TextProcessor.Run<LineCounterProcessor>(@"..\..\17-1.txt");
         }
     }
 }
