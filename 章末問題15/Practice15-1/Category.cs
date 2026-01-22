@@ -20,12 +20,5 @@
             this.Id = vId;
             this.Name = vName;
         }
-        /// <summary>
-        /// カテゴリ情報を文字列形式で返す
-        /// </summary>
-        /// <returns>IDとカテゴリ名を含む文字列</returns>
-        public override string ToString() {
-            return $"Id:{this.Id}, カテゴリ名:{this.Name}";
-        }
     }
 }

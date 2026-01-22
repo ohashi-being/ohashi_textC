@@ -32,12 +32,5 @@
             this.Price = vPrice;
             this.PublishedYear = vPublishedYear;
         }
-        /// <summary>
-        /// 書籍情報を文字列形式で返す
-        /// </summary>
-        /// <returns>発行年、カテゴリID、価格、タイトルを含む書籍情報の文字列</returns>
-        public override string ToString() {
-            return $"発行年:{this.PublishedYear},カテゴリ:{this.CategoryId},価格:{this.Price},タイトル:{this.Title}";
-        }
     }
 }
