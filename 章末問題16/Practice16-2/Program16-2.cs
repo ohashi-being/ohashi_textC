@@ -17,10 +17,16 @@ using System.Text;
 namespace Practice16_2 {
     class Program {
         static void Main(string[] args) {
-            string wDirectoryPath = @"..\..\16-2";
+
+            if (args.Length == 0) {
+                Console.WriteLine("エラー: 検索対象のディレクトリパスを引数で指定してください。");
+                return;
+            }
+
+            string wDirectoryPath = args[0];
 
             if (!Directory.Exists(wDirectoryPath)) {
-                Console.WriteLine("指定されたディレクトリが存在しません。");
+                Console.WriteLine($"指定されたディレクトリが存在しません。{wDirectoryPath}");
                 return;
             }
 
@@ -40,7 +46,16 @@ namespace Practice16_2 {
                 $"--- 処理完了 ---{Environment.NewLine}{Environment.NewLine}" +
                 $"逐次処理: {wSequentialTime}ms{Environment.NewLine}" +
                 $"並列処理: {wParallelTime}ms{Environment.NewLine}" +
-                $"高速化率: {(double)wParallelTime / wSequentialTime:F2}倍");
+                $"スピードアップ率: {(double)wSequentialTime / wParallelTime:F2}倍");
+        }
+
+        /// <summary>
+        /// 指定したディレクトリ内のC#ソースファイルを取得する
+        /// </summary>
+        /// <param name="vDirectoryPath">検索対象のディレクトリパス</param>
+        /// <returns>C#ソースファイルのパス配列</returns>
+        static string[] GetCSharpFiles(string vDirectoryPath) {
+            return Directory.GetFiles(vDirectoryPath, "*.cs", SearchOption.AllDirectories);
         }
 
         /// <summary>
@@ -55,10 +70,10 @@ namespace Practice16_2 {
             var wResult = new List<string>();
 
             try {
-                var wFiles = Directory.GetFiles(vDirectoryPath, "*.cs", SearchOption.AllDirectories);
+                var wFiles = GetCSharpFiles(vDirectoryPath);
 
                 foreach (var wFile in wFiles) {
-                    if (ContainsBothKeywords(wFile, vKeywords)) wResult.Add(wFile);
+                    if (ContainsBothKeywords(wFile, vKeywords)) wResult.Add(Path.GetFullPath(wFile));
                 }
             } catch (Exception ex) {
                 Console.WriteLine(
@@ -71,6 +86,7 @@ namespace Practice16_2 {
             vElapsedMilliSeconds = wStopWatch.ElapsedMilliseconds;
             return wResult;
         }
+
         /// <summary>
         /// 指定したディレクトリ内のC#のソースファイルからキーワードを利用しているファイルを取得する（並列処理）
         /// </summary>
@@ -83,11 +99,12 @@ namespace Practice16_2 {
             var wResult = new List<string>();
 
             try {
-                var wFiles = Directory.GetFiles(vDirectoryPath, "*.cs", SearchOption.AllDirectories);
+                var wFiles = GetCSharpFiles(vDirectoryPath);
 
                 wResult = wFiles
                     .AsParallel()
                     .Where(wFile => ContainsBothKeywords(wFile, vKeywords))
+                    .Select(wFile => Path.GetFullPath(wFile))
                     .ToList();
             } catch (Exception ex) {
                 Console.WriteLine(
@@ -124,7 +141,7 @@ namespace Practice16_2 {
         /// ファイル内にすべてのキーワードが含まれているかどうかを確認する
         /// </summary>
         /// <param name="vFilePath">検索対象のファイルパス</param>
-        /// <param name="vKeywords">検索するキーワードの配列/param>
+        /// <param name="vKeywords">検索するキーワードの配列</param>
         /// <returns>すべてのキーワードが含まれているかどうか</returns>
         static bool ContainsBothKeywords(string vFilePath, string[] vKeywords) {
             try {

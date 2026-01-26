@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 /* 問題16.1
  
-.NET Farmework 4.5以降のStreamReaderクラスには、非同期処理を実現するReadLineAsyncメソッドが追加されています。
+.NET Framework 4.5以降のStreamReaderクラスには、非同期処理を実現するReadLineAsyncメソッドが追加されています。
 このメソッドを使い、テキストファイルを非同期で読み込むコードを書いてください。
 アプリケーションの形態は、好きなものを選択してください。
 
@@ -14,10 +14,21 @@ using System.Threading.Tasks;
 namespace Practice16_1 {
     class Program {
         static async Task Main(string[] args) {
-            var wFilePath = @"..\..\16-1.txt";
+
+            if (args.Length == 0) {
+                Console.WriteLine("エラー: 検索対象のファイルパスを引数で指定してください。");
+                return;
+            }
+
+            string wFilePath = args[0];
 
             if (!File.Exists(wFilePath)) {
                 Console.WriteLine("指定されたファイルが存在しません。");
+                return;
+            }
+
+            if (!Path.GetExtension(wFilePath).Equals(".txt", StringComparison.OrdinalIgnoreCase)) {
+                Console.WriteLine("指定されたファイルはテキストファイルではありません。");
                 return;
             }
 
@@ -28,6 +39,7 @@ namespace Practice16_1 {
             } catch (Exception ex) {
                 Console.WriteLine(
                     $"エラーが発生しました{Environment.NewLine}" +
+                    $"例外：{ex.GetType().Name}{Environment.NewLine}" +
                     $"内容：{ex.Message}");
             }
 
