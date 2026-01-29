@@ -30,9 +30,9 @@ namespace Practice16_2 {
                 return;
             }
 
-            string[] wKeywords = { "async", "await" };
+            string[] wKeywords = { "async", "await", "Task" };
 
-            Console.WriteLine($"検索キーワード: '{wKeywords[0]}' と '{wKeywords[1]}'{Environment.NewLine}");
+            Console.WriteLine($"検索キーワード: '{string.Join("' と '", wKeywords)}'{Environment.NewLine}");
 
             Console.WriteLine("--- 逐次処理 ---");
             var wSequentialResult = SearchFileSequential(wDirectoryPath, wKeywords, out long wSequentialTime);
@@ -73,7 +73,7 @@ namespace Practice16_2 {
                 var wFiles = GetCSharpFiles(vDirectoryPath);
 
                 foreach (var wFile in wFiles) {
-                    if (ContainsBothKeywords(wFile, vKeywords)) wResult.Add(Path.GetFullPath(wFile));
+                    if (ContainsAllKeywords(wFile, vKeywords)) wResult.Add(Path.GetFullPath(wFile));
                 }
             } catch (Exception ex) {
                 Console.WriteLine(
@@ -103,7 +103,7 @@ namespace Practice16_2 {
 
                 wResult = wFiles
                     .AsParallel()
-                    .Where(wFile => ContainsBothKeywords(wFile, vKeywords))
+                    .Where(wFile => ContainsAllKeywords(wFile, vKeywords))
                     .Select(wFile => Path.GetFullPath(wFile))
                     .ToList();
             } catch (Exception ex) {
@@ -143,10 +143,10 @@ namespace Practice16_2 {
         /// <param name="vFilePath">検索対象のファイルパス</param>
         /// <param name="vKeywords">検索するキーワードの配列</param>
         /// <returns>すべてのキーワードが含まれているかどうか</returns>
-        static bool ContainsBothKeywords(string vFilePath, string[] vKeywords) {
+        static bool ContainsAllKeywords(string vFilePath, string[] vKeywords) {
             try {
                 string wContent = File.ReadAllText(vFilePath, Encoding.UTF8);
-                return wContent.Contains(vKeywords[0]) && wContent.Contains(vKeywords[1]);
+                return vKeywords.All(x => wContent.Contains(x));
             } catch (Exception ex) {
                 Console.WriteLine($"警告: ファイル読み込みエラー ({Path.GetFileName(vFilePath)}): {ex.Message}");
                 return false;
