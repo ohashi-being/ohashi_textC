@@ -43,11 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITextFileServicecs.cs" />
     <Compile Include="Program17-3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextFileProcessor.cs" />
+    <Compile Include="ToHankakuService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Practice17-1\Practice17-1.csproj">
+      <Project>{17513a50-1551-480f-b90d-58f2a03c2790}</Project>
+      <Name>Practice17-1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextFileProcessor\TextFileProcessor.csproj">
+      <Project>{a7602c42-b20f-41e7-b701-e6e7d296dd44}</Project>
+      <Name>TextFileProcessor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
