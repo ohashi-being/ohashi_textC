@@ -35,7 +35,8 @@ namespace Practice17_2 {
         /// <returns>ConverterBaseのインスタンス</returns>
         private static ConverterBase GetConverter(string vPromptType) {
             while (true) {
-                Console.WriteLine($"{vPromptType}の単位を入力して下さい (meter/km/kilometer/mile/inch/feet/yard):");
+                string wAvailableUnits = ConverterFactory.GetAvailableUnits();
+                Console.WriteLine($"{vPromptType}の単位を入力して下さい ({wAvailableUnits}):");
                 string wUnit = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(wUnit)) {

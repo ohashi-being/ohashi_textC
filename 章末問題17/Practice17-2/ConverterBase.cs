@@ -1,4 +1,6 @@
-﻿namespace Practice17_2 {
+﻿using System.Linq;
+
+namespace Practice17_2 {
     /// <summary>
     /// 距離変換用の基底クラス
     /// </summary>
@@ -9,7 +11,12 @@
         /// </summary>
         /// <param name="vUnitName">単位名</param>
         /// <returns>対象単位かどうか</returns>
-        public abstract bool IsMyUnit(string vUnitName);
+        public virtual bool IsMyUnit(string vUnitName) {
+            if (string.IsNullOrWhiteSpace(vUnitName)) {
+                return false;
+            }
+            return this.UnitKeyWords.Any(x => x.Equals(vUnitName, System.StringComparison.OrdinalIgnoreCase));
+        }
 
         /// <summary>
         /// メートルとの比率
@@ -20,6 +27,12 @@
         /// 距離の単位名
         /// </summary>
         public abstract string UnitName { get; }
+
+        /// <summary>
+        /// 距離の単位を識別するキーワードの配列
+        /// </summary>
+
+        public abstract string[] UnitKeyWords { get; }
 
         /// <summary>
         /// メートルからの変換

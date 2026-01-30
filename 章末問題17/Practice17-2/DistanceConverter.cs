@@ -1,6 +1,6 @@
 ﻿namespace Practice17_2 {
     /// <summary>
-    /// /// 距離の単位変換用のクラス
+    /// 距離の単位変換用のクラス
     /// </summary>
     public class DistanceConverter {
 

@@ -9,14 +9,14 @@ namespace Practice17_3 {
         /// <summary>
         /// テキストファイルを処理するインターフェース 
         /// </summary>
-        private readonly ITextFileService Service;
+        private readonly ITextFileService FService;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="vService">処理方法</param>
         public TextFileProcessor(ITextFileService vService) {
-            Service = vService;
+            FService = vService;
         }
 
         /// <summary>
@@ -24,14 +24,14 @@ namespace Practice17_3 {
         /// </summary>
         /// <param name="vFilePath">ファイルパス</param>
         public void Run(string vFilePath) {
-            Service.Initialize(vFilePath);
+            FService.Initialize(vFilePath);
             using (var wStreamReader = new StreamReader(vFilePath)) {
                 while (!wStreamReader.EndOfStream) {
                     var wLine = wStreamReader.ReadLine();
-                    Service.Execute(wLine);
+                    FService.Execute(wLine);
                 }
             }
-            Service.Terminate();
+            FService.Terminate();
         }
     }
 }

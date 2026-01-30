@@ -14,16 +14,21 @@ namespace Practice17_1 {
     class Program {
         static void Main(string[] args) {
             if (args.Length != 1) {
-                Console.WriteLine("コマンドライン引数を入力してください");
+                Console.WriteLine(
+                    $"コマンドライン引数を入力してください{Environment.NewLine}" +
+                    $"入力方法：ファイルパス" +
+                    $@"例: ..\..\sample.txt");
                 return;
             }
 
-            if (!File.Exists(args[0])) {
+            var wFailPath = args[0];
+
+            if (!File.Exists(wFailPath)) {
                 Console.WriteLine("指定されたファイルが存在しません");
                 return;
             }
 
-            TextProcessor.Run<ReplaceHankakuProcessor>(args[0]);
+            TextProcessor.Run<ReplaceHankakuProcessor>(wFailPath);
 
             Console.WriteLine($"{Environment.NewLine}Enterキーを押して終了してください...");
             Console.ReadLine();

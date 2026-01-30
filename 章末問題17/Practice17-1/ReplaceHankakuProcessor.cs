@@ -39,12 +39,11 @@ namespace Practice17_1 {
         /// 変換結果のまとめを表示する
         /// </summary>
         protected override void Terminate() {
-            if (FTotalReplacedChar == 0) {
-                Console.WriteLine($"{Environment.NewLine}全角数字は見つかりませんでした。");
-                return;
-            }
-            Console.WriteLine();
-            Console.WriteLine($"{FTotalReplacedChar}文字を変換しました。");
+            string wMassage =
+                FTotalReplacedChar == 0
+                ? $"全角数字は見つかりませんでした。"
+                : $"{FTotalReplacedChar}文字を変換しました。";
+            Console.WriteLine($"{Environment.NewLine}{wMassage}");
         }
     }
 }

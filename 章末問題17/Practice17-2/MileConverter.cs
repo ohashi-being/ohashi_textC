@@ -4,20 +4,18 @@
     /// </summary>
     public class MileConverter : ConverterBase {
         /// <summary>
-        /// 指定された単位名がマイルを表すかどうか調べる
-        /// </summary>
-        /// <param name="vName">判定する単位名</param>
-        /// <returns>指定された単位名がマイルを表すかどうか</returns>
-        public override bool IsMyUnit(string vName) => vName.ToLower() == "mile" || vName == this.UnitName;
-
-        /// <summary>
         /// メートルとの換算比率
         /// </summary>
-        protected override double Ratio { get { return 1609.344; } }
+        protected override double Ratio => 1609.344;
 
         /// <summary>
         /// 単位の表示名
         /// </summary>
-        public override string UnitName { get { return "マイル"; } }
+        public override string UnitName => "マイル";
+
+        /// <summary>
+        /// ユーザーが入力可能なキーワードの配列
+        /// </summary>
+        public override string[] UnitKeyWords => new string[] { "mile" };
     }
 }
