@@ -57,7 +57,7 @@ namespace Practice16_1 {
 
             using (var wReader = new StreamReader(vFilePath, Encoding.UTF8)) {
                 string wLine;
-                while ((wLine = await wReader.ReadLineAsync()) != null) {
+                while (( wLine = await wReader.ReadLineAsync() ) != null) {
                     wStringBuilder.AppendLine(wLine);
                 }
             }

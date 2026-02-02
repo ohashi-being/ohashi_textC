@@ -42,6 +42,11 @@ namespace Practice16_2 {
             var wParallelResult = SearchFileParallel(wDirectoryPath, wKeywords, out long wParallelTime);
             DisplayResults(wParallelResult, wParallelTime);
 
+            if (wParallelTime == 0) {
+                Console.WriteLine("並列処理の実行時間が0msのため、スピードアップ率を計算できません。");
+                return;
+            }
+
             Console.WriteLine(
                 $"--- 処理完了 ---{Environment.NewLine}{Environment.NewLine}" +
                 $"逐次処理: {wSequentialTime}ms{Environment.NewLine}" +
@@ -103,9 +108,10 @@ namespace Practice16_2 {
 
                 wResult = wFiles
                     .AsParallel()
-                    .Where(wFile => ContainsAllKeywords(wFile, vKeywords))
-                    .Select(wFile => Path.GetFullPath(wFile))
+                    .Where(x => ContainsAllKeywords(x, vKeywords))
+                    .Select(x => Path.GetFullPath(x))
                     .ToList();
+
             } catch (Exception ex) {
                 Console.WriteLine(
                     $"{Environment.NewLine}エラーが発生しました。{Environment.NewLine}" +
