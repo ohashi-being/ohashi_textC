@@ -21,9 +21,9 @@ namespace TextFileProcessor {
         /// <param name="vFilePath">処理対象のファイルパス</param>
         private void Process(string vFilePath) {
             Initialize(vFilePath);
-            using (var wStramReader = new StreamReader(vFilePath)) {
-                while (!wStramReader.EndOfStream) {
-                    string wLine = wStramReader.ReadLine();
+            using (var wStreamReader = new StreamReader(vFilePath)) {
+                while (!wStreamReader.EndOfStream) {
+                    string wLine = wStreamReader.ReadLine();
                     Execute(wLine);
                 }
             }
@@ -33,7 +33,7 @@ namespace TextFileProcessor {
         /// <summary>
         /// ファイルを読み込む前の初期化処理
         /// </summary>
-        /// <param name="vFilePath">ファイパス</param>
+        /// <param name="vFilePath">ファイルパス</param>
         protected virtual void Initialize(string vFilePath) { }
 
         /// <summary>
