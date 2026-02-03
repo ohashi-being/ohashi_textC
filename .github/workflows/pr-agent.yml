@@ -1,0 +1,48 @@
+# name:Actionsに登録される名前
+name: pr-agent
+
+# on:処理を実行するトリガーの設定 
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    # opened:プルリクエストが作成されたとき
+    # reopened:クローズされたプルリクエストが再度オープンされたとき
+    # synchronize:プルリクエストに新しいコミットがプッシュされたとき
+  issue_comment:
+    types: [created, edited]
+    # created:コメントが作成されたとき（コマンドが記入されていれば実行）
+    # edited:コメントが編集されたとき（コマンドが記入されていれば実行）
+
+# permissions:処理実行時の権限設定
+permissions:
+  pull-requests: write
+  issues: write
+
+# jobs:PR-Agentの環境設定
+jobs:
+  pr_agent:
+    runs-on: ubuntu-latest
+    name: Run PR Agent
+    if: ${{ github.event.sender.type != 'Bot' }}
+    steps:
+      - id: pr-agent
+        uses: Codium-ai/pr-agent@main
+        env:
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # 処理を依頼するときの指示内容
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: >-
+            Please use Japanese.
+          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: >-
+            Please use Japanese.
+          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: >-
+            Please use Japanese.
+          PR_UPDATE_CHANGELOG.EXTRA_INSTRUCTIONS: >-
+            Please use Japanese.
+
+          # プルリクエスト時の自動実行設定（true：自動実行される）
+          # 注意：on:の中でpull_requestが設定されていることが前提
+          GITHUB_ACTION_CONFIG.AUTO_DESCRIBE: true
+          GITHUB_ACTION_CONFIG.AUTO_REVIEW: true
+          GITHUB_ACTION_CONFIG.AUTO_IMPROVE: true
